@@ -5,36 +5,13 @@ import { config } from "dotenv";
 import passport from "passport";
 import { randomBytes } from "crypto";
 import passportSteam from "passport-steam";
+import { AuthenticatedUser } from "./Types/AuthenticatedUser";
 
 config();
-const port = process.env.PORT || 3000;
 const app: Express = express();
 const secretKey = randomBytes(32).toString("hex");
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((id, done: any) => {
-  done(null, id);
-});
-
+const port = process.env.PORT || 3000;
 const SteamStrategy = passportSteam.Strategy;
-passport.use(
-  new SteamStrategy(
-    {
-      returnURL: `http://localhost:${process.env.PORT}/auth/steam/return`,
-      realm: `http://localhost:${process.env.PORT}/`,
-      apiKey: process.env.STEAM_API_KEY as string,
-    },
-    (identifier, profile, done) => {
-      process.nextTick(() => {
-        profile.id = identifier;
-        return done(null, profile);
-      });
-    }
-  )
-);
 
 app.use(express.json());
 app.use((req: Request, res: Response, next) => {
@@ -51,6 +28,15 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((id, done: any) => {
+  done(null, id);
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -80,15 +66,32 @@ app.get("/logout", (req: Request, res: Response) => {
 });
 
 app.get(
-  "/auth/steam",
+  "/login",
   (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
       return res.redirect("/already-logged-in");
     }
+    const host = `${req.protocol}://${req.get("host")}`;
+    passport.use(
+      new SteamStrategy(
+        {
+          returnURL: `${host}/auth/steam/return`,
+          realm: host,
+          apiKey: process.env.STEAM_API_KEY!,
+        },
+        (identifier, profile, done) => {
+          process.nextTick(() => {
+            profile.id = identifier;
+            return done(null, profile);
+          });
+        }
+      )
+    );
     next();
   },
+
   passport.authenticate("steam", {
-    failureRedirect: "/",
+    failureRedirect: "/login-error",
   }),
   (_, res: Response) => {
     res.redirect("/");
@@ -104,9 +107,7 @@ app.get(
 );
 
 app.get("/protected", ensureAuthenticated, (_, res) => {
-  res.send(
-    "Ta strona jest chroniona. Tylko zalogowani użytkownicy mogą ją zobaczyć."
-  );
+  res.send("You are authenticated. You can now access the protected route.");
 });
 
 app.get("/login-error", (_, res) => {
@@ -117,10 +118,89 @@ app.get("/already-logged-in", (_, res) => {
   res.send("You are already logged in.");
 });
 
-app.get("/account", ensureAuthenticated, function (req, res) {
+app.get("/account", ensureAuthenticated, (req, res) => {
   res.send(req.user);
 });
 
+app.get("/account-details", ensureAuthenticated, (req, res) => {
+  const user = req.user as AuthenticatedUser;
+  const api = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
+
+  fetch(api)
+    .then((response) => response.json())
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send("Error fetching account details.");
+    });
+});
+
+app.get("/games", ensureAuthenticated, (req, res) => {
+  const user = req.user as AuthenticatedUser;
+  const url =
+    `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?` +
+    new URLSearchParams({
+      key: process.env.STEAM_API_KEY!,
+      steamid: user?._json.steamid,
+      include_appinfo: "1",
+      include_played_free_games: "1",
+      language: "en",
+      include_extended_appinfo: "0",
+    });
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send(err.message);
+    });
+});
+app.get("/friends", ensureAuthenticated, (req, res) => {
+  const user = req.user as AuthenticatedUser;
+  const api =
+    `https://api.steampowered.com/ISteamUser/GetFriendList/v1/?` +
+    new URLSearchParams({
+      key: process.env.STEAM_API_KEY!,
+      steamid: user?._json.steamid,
+      relationship: "friend",
+    });
+
+  fetch(api)
+    .then((response) => response.json())
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send("Error fetching friends.");
+    });
+});
+
+app.get("/level", ensureAuthenticated, (req, res) => {
+  const user = req.user as AuthenticatedUser;
+  const api =
+    `https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?` +
+    new URLSearchParams({
+      key: process.env.STEAM_API_KEY!,
+      steamid: user?._json.steamid,
+    });
+
+  fetch(api)
+    .then((response) => response.json())
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send("Error fetching level.");
+    });
+});
+
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${process.env.PORT}`);
+  console.log(`Server is running on port: ${process.env.PORT}`);
 });
