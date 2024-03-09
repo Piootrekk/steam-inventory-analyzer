@@ -5,7 +5,9 @@ import { config } from "dotenv";
 import passport from "passport";
 import { randomBytes } from "crypto";
 import passportSteam from "passport-steam";
-import { AuthenticatedUser } from "./Types/AuthenticatedUser";
+import { AuthenticatedUser } from "./types/AuthenticatedUser";
+import axios from "axios";
+import { catchErrorResponse } from "./utils/catchErrorResponse";
 
 config();
 const app: Express = express();
@@ -29,14 +31,6 @@ app.use(
   })
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((id, done: any) => {
-  done(null, id);
-});
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -51,7 +45,7 @@ const ensureAuthenticated = (
   res.redirect("/login-error");
 };
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
@@ -122,22 +116,19 @@ app.get("/account", ensureAuthenticated, (req, res) => {
   res.send(req.user);
 });
 
-app.get("/account-details", ensureAuthenticated, (req, res) => {
+app.get("/account-details", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
-  const api = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
-
-  fetch(api)
-    .then((response) => response.json())
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.send("Error fetching account details.");
-    });
+  const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
+  try {
+    const response = await axios.get(url);
+    res.send(response.data);
+  } catch (error: unknown) {
+    const errorResponse = catchErrorResponse(axios, error);
+    res.send(errorResponse);
+  }
 });
 
-app.get("/games", ensureAuthenticated, (req, res) => {
+app.get("/games", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const url =
     `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?` +
@@ -149,18 +140,33 @@ app.get("/games", ensureAuthenticated, (req, res) => {
       language: "en",
       include_extended_appinfo: "0",
     });
-
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.send(err.message);
-    });
+  try {
+    const response = await axios.get(url);
+    res.send(response.data);
+  } catch (error: unknown) {
+    const errorResponse = catchErrorResponse(axios, error);
+    res.send(errorResponse);
+  }
 });
-app.get("/friends", ensureAuthenticated, (req, res) => {
+
+app.get("/level", ensureAuthenticated, async (req, res) => {
+  const user = req.user as AuthenticatedUser;
+  const api =
+    `https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?` +
+    new URLSearchParams({
+      key: process.env.STEAM_API_KEY!,
+      steamid: user?._json.steamid,
+    });
+  try {
+    const response = await axios.get(api);
+    res.send(response.data);
+  } catch (error: unknown) {
+    const errorResponse = catchErrorResponse(axios, error);
+    res.send(errorResponse);
+  }
+});
+
+app.get("/friends", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const api =
     `https://api.steampowered.com/ISteamUser/GetFriendList/v1/?` +
@@ -169,36 +175,42 @@ app.get("/friends", ensureAuthenticated, (req, res) => {
       steamid: user?._json.steamid,
       relationship: "friend",
     });
-
-  fetch(api)
-    .then((response) => response.json())
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.send("Error fetching friends.");
-    });
+  try {
+    const response = await axios.get(api);
+    res.send(response.data);
+  } catch (error: unknown) {
+    const errorResponse = catchErrorResponse(axios, error);
+    res.send(errorResponse);
+  }
 });
 
-app.get("/level", ensureAuthenticated, (req, res) => {
-  const user = req.user as AuthenticatedUser;
-  const api =
-    `https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?` +
-    new URLSearchParams({
-      key: process.env.STEAM_API_KEY!,
-      steamid: user?._json.steamid,
-    });
+app.get("/items/:game", ensureAuthenticated, async (req, res) => {
+  const allowedGames = ["rust", "cs2", "tf2"];
+  const requestedGame = req.params.game.toLowerCase();
+  if (!allowedGames.includes(requestedGame)) {
+    return res.status(404).send("Not Found");
+  }
+  const GameIdMap = new Map([
+    ["rust", 252490],
+    ["cs2", 730],
+    ["tf2", 440],
+  ]);
 
-  fetch(api)
-    .then((response) => response.json())
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.send("Error fetching level.");
+  const gameId = GameIdMap.get(requestedGame);
+  const user = req.user as AuthenticatedUser;
+  const url =
+    `https://steamcommunity.com/inventory/${user?._json.steamid}/${gameId}/2?` +
+    new URLSearchParams({
+      l: "english",
+      count: "5000",
     });
+  try {
+    const response = await axios.get(url);
+    res.send(response.data);
+  } catch (error: unknown) {
+    const errorResponse = catchErrorResponse(axios, error);
+    res.send(errorResponse);
+  }
 });
 
 app.listen(port, () => {

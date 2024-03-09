@@ -1,33 +1,41 @@
-// passport.ts
-import passport from "passport";
 import passportSteam from "passport-steam";
-import { config } from "dotenv";
+import { Request, NextFunction } from "express";
+import passport from "passport";
 
-config();
+export const configureSteamAuth = (req: Request) => {
+  const SteamStrategy = passportSteam.Strategy;
+  const host = `${req.protocol}://${req.get("host")}`;
 
-const SteamStrategy = passportSteam.Strategy;
-passport.use(
-  new SteamStrategy(
-    {
-      returnURL: `http://localhost:${process.env.PORT}/auth/steam/return`,
-      realm: `http://localhost:${process.env.PORT}/`,
-      apiKey: process.env.STEAM_API_KEY as string,
-    },
-    (identifier, profile, done) => {
-      process.nextTick(() => {
-        profile.id = identifier;
-        return done(null, profile);
-      });
-    }
-  )
-);
+  passport.serializeUser((user, done) => {
+    done(null, user);
+  });
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
+  passport.deserializeUser((id, done: any) => {
+    done(null, id);
+  });
 
-passport.deserializeUser((obj, done: any) => {
-  done(null, obj);
-});
+  passport.use(
+    new SteamStrategy(
+      {
+        returnURL: `${host}/auth/steam/return`,
+        realm: host,
+        apiKey: process.env.STEAM_API_KEY!,
+      },
+      (identifier, profile, done) => {
+        process.nextTick(() => {
+          profile.id = identifier;
+          return done(null, profile);
+        });
+      }
+    )
+  );
+};
 
-export default passport;
+export const steamAuthMiddleware = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  configureSteamAuth(req);
+  next();
+};
