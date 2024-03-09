@@ -1,8 +1,8 @@
 import passportSteam from "passport-steam";
-import { Request, NextFunction } from "express";
+import { Request, NextFunction, Response } from "express";
 import passport from "passport";
 
-export const configureSteamAuth = (req: Request) => {
+const configureSteamAuth = (req: Request) => {
   const SteamStrategy = passportSteam.Strategy;
   const host = `${req.protocol}://${req.get("host")}`;
 
@@ -31,11 +31,9 @@ export const configureSteamAuth = (req: Request) => {
   );
 };
 
-export const steamAuthMiddleware = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   configureSteamAuth(req);
   next();
 };
+
+export default authMiddleware;

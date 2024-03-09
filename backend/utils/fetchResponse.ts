@@ -1,6 +1,7 @@
 import { AxiosError, AxiosStatic } from "axios";
+import axios from "axios";
 
-export const catchErrorResponse = (axios: AxiosStatic, error: unknown) => {
+const catchErrorResponse = (axios: AxiosStatic, error: unknown) => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
     return {
@@ -9,4 +10,13 @@ export const catchErrorResponse = (axios: AxiosStatic, error: unknown) => {
       code: axiosError.code || "Unknown",
     };
   } else return { message: "Error not specified." };
+};
+
+export const fetchAxiosResponse = async (url: string) => {
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error: unknown) {
+    return catchErrorResponse(axios, error);
+  }
 };
