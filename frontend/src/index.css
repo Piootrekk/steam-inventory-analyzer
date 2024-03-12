@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dark-primary: 15, 23, 42;
+  --dark-secondary: 30, 41, 59;
+  --dark-tertiary: 41, 53, 72;
+}

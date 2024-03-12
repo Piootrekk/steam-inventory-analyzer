@@ -22,6 +22,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(authMiddleware);
+
 const ensureAuthenticated = (
   req: Request,
   res: Response,
@@ -41,7 +42,7 @@ app.get("/logout", (req: Request, res: Response) => {
   req.logout({}, (err) => {
     if (err) {
       console.error(err);
-      return res.redirect("/");
+      return res.status(500).send("Error logging out");
     }
     res.redirect("/");
   });
@@ -61,31 +62,31 @@ app.get(
   "/auth/steam/return",
   passport.authenticate("steam", { failureRedirect: "/login-error" }),
   (_, res) => {
-    res.redirect("/");
+    res.redirect(process.env.FRONTEND_URL || "http://localhost:3000");
   }
 );
 
 app.get("/protected", ensureAuthenticated, (_, res) => {
-  res.send("You are authenticated. You can now access the protected route.");
+  res.json({ message: "You are authenticated" });
 });
 
 app.get("/login-error", (_, res) => {
-  res.send("Error logging in.");
+  return res.status(401).json({ message: "Login failed" });
 });
 
 app.get("/already-logged-in", (_, res) => {
-  res.send("You are already logged in.");
+  res.status(406).json({ message: "You are already logged in" });
 });
 
 app.get("/account", ensureAuthenticated, (req, res) => {
-  res.send(req.user);
+  res.json(req.user);
 });
 
 app.get("/account-details", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
   const response = await fetchAxiosResponse(url);
-  res.send(response);
+  res.json(response);
 });
 
 app.get("/games", ensureAuthenticated, async (req, res) => {
@@ -101,7 +102,7 @@ app.get("/games", ensureAuthenticated, async (req, res) => {
       include_extended_appinfo: "0",
     });
   const response = await fetchAxiosResponse(url);
-  res.send(response);
+  res.json(response);
 });
 
 app.get("/level", ensureAuthenticated, async (req, res) => {
@@ -113,7 +114,7 @@ app.get("/level", ensureAuthenticated, async (req, res) => {
       steamid: user?._json.steamid,
     });
   const response = await fetchAxiosResponse(api);
-  res.send(response);
+  res.json(response);
 });
 
 app.get("/friends", ensureAuthenticated, async (req, res) => {
@@ -126,14 +127,14 @@ app.get("/friends", ensureAuthenticated, async (req, res) => {
       relationship: "friend",
     });
   const response = await fetchAxiosResponse(api);
-  res.send(response);
+  res.json(response);
 });
 
 app.get("/items/:game", ensureAuthenticated, async (req, res) => {
   const allowedGames = ["rust", "cs2", "tf2"];
   const requestedGame = req.params.game.toLowerCase();
   if (!allowedGames.includes(requestedGame)) {
-    return res.status(404).send("Not Found");
+    return res.status(404).json({ message: "Private profile" });
   }
   const GameIdMap = new Map([
     ["rust", 252490],
@@ -151,7 +152,11 @@ app.get("/items/:game", ensureAuthenticated, async (req, res) => {
     });
   console.log(url);
   const response = await fetchAxiosResponse(url);
-  res.send(response);
+  res.json(response);
+});
+
+app.get("/test", (_, res: Response) => {
+  res.json({ message: "Test" });
 });
 
 app.listen(port, () => {

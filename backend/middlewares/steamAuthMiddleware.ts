@@ -1,11 +1,13 @@
+// AuthMiddleware.ts
 import passportSteam from "passport-steam";
 import { Request, NextFunction, Response } from "express";
 import passport from "passport";
 
 const configureSteamAuth = (req: Request) => {
   const SteamStrategy = passportSteam.Strategy;
-  const host = `${req.protocol}://${req.get("host")}`;
 
+  const backendURL = `${req.protocol}:${req.get("host")}`;
+  const frontURL = process.env.FRONTEND_URL || backendURL;
   passport.serializeUser((user, done) => {
     done(null, user);
   });
@@ -17,8 +19,8 @@ const configureSteamAuth = (req: Request) => {
   passport.use(
     new SteamStrategy(
       {
-        returnURL: `${host}/auth/steam/return`,
-        realm: host,
+        returnURL: `${backendURL}/auth/steam/return`,
+        realm: backendURL,
         apiKey: process.env.STEAM_API_KEY!,
       },
       (identifier, profile, done) => {

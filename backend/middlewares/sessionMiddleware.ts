@@ -1,3 +1,4 @@
+// sessionMiddleware.ts
 import session from "express-session";
 import { randomBytes } from "crypto";
 
