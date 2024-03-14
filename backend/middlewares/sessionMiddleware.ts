@@ -6,8 +6,12 @@ const secretKey = randomBytes(32).toString("hex");
 const sessionMiddleware = session({
   secret: secretKey,
   name: "sessionId",
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7 * 15, // 15 weeks
+    secure: "auto",
+  },
 });
 
 export default sessionMiddleware;

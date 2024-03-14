@@ -2,49 +2,42 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import { config } from "dotenv";
 import passport from "passport";
-
 import { AuthenticatedUser } from "./types/AuthenticatedUser";
 import { fetchAxiosResponse } from "./utils/fetchResponse";
-import authMiddleware from "./middlewares/steamAuthMiddleware";
-import headerMiddleware from "./middlewares/headerMiddleware";
+import authMiddleware, {
+  ensureAuthenticated,
+} from "./middlewares/steamAuthMiddleware";
+import headerMiddleware, {
+  corsOptionsMiddleware,
+} from "./middlewares/headerMiddleware";
 import sessionMiddleware from "./middlewares/sessionMiddleware";
 
 config();
-
 const app: Express = express();
-const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(headerMiddleware);
+app.use(corsOptionsMiddleware);
 app.use(sessionMiddleware);
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(authMiddleware);
-
-const ensureAuthenticated = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login-error");
-};
 
 app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
 app.get("/logout", (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "You are not logged in" });
+  }
   req.logout({}, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).send("Error logging out");
+      return res.status(500).json({ messege: "Error logging out" });
     }
-    res.redirect("/");
+    res.clearCookie("sessionId");
+    return res.status(200).json({ message: "Logged out succesfully! " });
   });
 });
 
@@ -53,7 +46,12 @@ app.get(
   passport.authenticate("steam", {
     failureRedirect: "/login-error",
   }),
-  (_, res: Response) => {
+
+  (req: Request, res: Response) => {
+    if (req.isAuthenticated()) {
+      res.redirect("/already-logged-in");
+    }
+    res.cookie("sessionId", req.sessionID);
     res.redirect("/");
   }
 );
@@ -61,8 +59,10 @@ app.get(
 app.get(
   "/auth/steam/return",
   passport.authenticate("steam", { failureRedirect: "/login-error" }),
-  (_, res) => {
-    res.redirect(process.env.FRONTEND_URL || "http://localhost:3000");
+  (req, res) => {
+    res.cookie("sessionID", req.sessionID);
+    console.log(req.sessionID);
+    res.redirect(process.env.FRONTEND_URL!);
   }
 );
 
@@ -71,7 +71,7 @@ app.get("/protected", ensureAuthenticated, (_, res) => {
 });
 
 app.get("/login-error", (_, res) => {
-  return res.status(401).json({ message: "Login failed" });
+  return res.status(401).json({ message: "Login failed 😭" });
 });
 
 app.get("/already-logged-in", (_, res) => {
@@ -85,6 +85,7 @@ app.get("/account", ensureAuthenticated, (req, res) => {
 app.get("/account-details", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
+  console.log(url);
   const response = await fetchAxiosResponse(url);
   res.json(response);
 });
@@ -134,7 +135,7 @@ app.get("/items/:game", ensureAuthenticated, async (req, res) => {
   const allowedGames = ["rust", "cs2", "tf2"];
   const requestedGame = req.params.game.toLowerCase();
   if (!allowedGames.includes(requestedGame)) {
-    return res.status(404).json({ message: "Private profile" });
+    return res.status(404).json({ message: "Something wrong" });
   }
   const GameIdMap = new Map([
     ["rust", 252490],
@@ -150,8 +151,10 @@ app.get("/items/:game", ensureAuthenticated, async (req, res) => {
       l: "english",
       count: "5000",
     });
-  console.log(url);
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
   res.json(response);
 });
 
@@ -159,6 +162,6 @@ app.get("/test", (_, res: Response) => {
   res.json({ message: "Test" });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${process.env.PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });

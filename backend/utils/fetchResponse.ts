@@ -20,3 +20,4 @@ export const fetchAxiosResponse = async (url: string) => {
     return catchErrorResponse(axios, error);
   }
 };
+

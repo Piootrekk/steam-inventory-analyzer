@@ -4,15 +4,13 @@ import { baseBackendURL } from "../env";
 const fetchApiJson = async (url: string) => {
   const response = await fetch(url, {
     method: "GET",
+    credentials: "include",
   });
+
   return await response.json();
 };
 
 const fetchLogin = async () => {
-  //   const response = await fetch(`${baseBackendURL}/login`, {
-  //     method: "GET",
-  //     credentials: "include",
-  //   });
   window.location.href = `${baseBackendURL}/login`;
 };
 
@@ -29,11 +27,11 @@ const endpoints = [
 ];
 
 const Test = () => {
-  const [content, setContent] = useState("NO DATA FETCHED YET");
+  const [content, setContent] = useState({ message: "No data fetched!" });
 
   const handleClick = async (endpoint: string) => {
     const data = await fetchApiJson(`${baseBackendURL}${endpoint}`);
-    setContent(JSON.stringify(data));
+    setContent(data);
   };
 
   return (
@@ -57,8 +55,8 @@ const Test = () => {
             </button>
           ))}
         </div>
-        <div className=" mt-7 flex flex-col items-center">
-          <p>{content}</p>
+        <div className="mx-5 mt-7 flex flex-col items-center">
+          <pre>{JSON.stringify(content, null, 2)}</pre>
         </div>
       </div>
     </>
