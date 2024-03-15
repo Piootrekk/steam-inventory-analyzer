@@ -11,7 +11,7 @@ const fetchApiJson = async (url: string) => {
 };
 
 const fetchLogin = async () => {
-  window.location.href = `${baseBackendURL}/login`;
+  window.location.href = `${baseBackendURL}/login-v2`;
 };
 
 const endpoints = [
@@ -22,7 +22,9 @@ const endpoints = [
   "/games",
   "/level",
   "/friends",
-  "/items/:game",
+  "/items/tf2",
+  "/items/cs2",
+  "/items/rust",
   "/test",
 ];
 

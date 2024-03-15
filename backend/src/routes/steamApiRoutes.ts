@@ -12,7 +12,6 @@ router.get("/account", ensureAuthenticated, (req, res) => {
 router.get("/account-details", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
-  console.log(url);
   const response = await fetchAxiosResponse(url);
   res.json(response);
 });
