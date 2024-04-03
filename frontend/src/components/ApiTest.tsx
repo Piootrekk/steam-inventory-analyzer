@@ -1,20 +1,13 @@
 import { useState } from "react";
 import { baseBackendURL } from "../env";
+import { fetchApiJson } from "../utils/fetchApi";
 
-const fetchApiJson = async (url: string) => {
-  const response = await fetch(url, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  return await response.json();
-};
-
-const fetchLogin = async () => {
+const redirectToLogin = async () => {
   window.location.href = `${baseBackendURL}/login-v2`;
 };
 
 const endpoints = [
+  "/is-logged",
   "/logout",
   "/protected",
   "/account",
@@ -42,7 +35,7 @@ const Test = () => {
         <h1 className="text-2xl font-bold">Test API endpoints:</h1>
         <div className="flex flex-col items-center">
           <button
-            onClick={fetchLogin}
+            onClick={redirectToLogin}
             className="my-2 bg-slate-500 p-2 rounded-md w-40 text-white font-bold hover:bg-slate-600 transition-all duration-300 ease-in-out"
           >
             Login

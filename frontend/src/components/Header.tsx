@@ -1,25 +1,34 @@
-// import steam_login from "../assets/steam_login.png";
-// import { baseBackendURL } from "../env";
-// const Header = () => {
-//   const handleLogin = async () => {
-//     const response = await fetch(`${baseBackendURL}/login`, {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     return await response.json();
-//   };
+import steam_login from "../assets/steam_login.png";
+import { useAuthContext } from "../context/AuthContext";
+import { baseBackendURL } from "../env";
 
-//   return (
-//     <>
-//       <header className="flex justify-center mt-24">
-//         <button onClick={handleLogin}>
-//           <img src={steam_login} alt="Login with Steam" />
-//         </button>
-//       </header>
-//     </>
-//   );
-// };
+const handleLogin = async () => {
+  window.location.href = `${baseBackendURL}/login-v2`;
+};
 
-// export default Header;
+const Header = () => {
+  const auth = useAuthContext();
+  if (auth.isLogged) {
+    return (
+      <header className="flex justify-center mt-24">
+        <img src={auth.user._json.avatarfull} alt="Steam avatar" />
+        <div className="flex flex-col items-center ml-4">
+          <p>{auth.user.displayName}</p>
+          <button>Logout</button>
+        </div>
+      </header>
+    );
+  }
+
+  return (
+    <>
+      <header className="flex justify-center mt-24">
+        <button onClick={handleLogin}>
+          <img src={steam_login} alt="Login with Steam" />
+        </button>
+      </header>
+    </>
+  );
+};
+
+export default Header;

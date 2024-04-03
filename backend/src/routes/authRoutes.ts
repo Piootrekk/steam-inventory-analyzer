@@ -44,6 +44,7 @@ router.get(
   passport.authenticate("steam", { failureRedirect: "/login-error" }),
   (req: Request, res) => {
     res.cookie("sessionId", req.sessionID);
+
     console.log("Redirecting to: ", GLOBAL_REFER);
     res.redirect(GLOBAL_REFER);
   }
@@ -55,6 +56,14 @@ router.get("/protected", ensureAuthenticated, (req, res) => {
 
 router.get("/login-error", (_, res) => {
   return res.status(401).json({ message: "Login failed 😭" });
+});
+
+router.get("/is-logged", (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.status(200).json({ isLogged: true, user: req.user });
+  } else {
+    return res.status(200).json({ isLogged: false, user: null });
+  }
 });
 
 export default router;

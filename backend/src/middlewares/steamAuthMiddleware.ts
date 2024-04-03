@@ -51,4 +51,5 @@ export const ensureAuthenticated = (
   res.redirect("/login-error");
 };
 
+
 export default authMiddleware;
