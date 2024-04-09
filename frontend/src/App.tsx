@@ -9,16 +9,9 @@ import React from "react";
 
 const App = () => {
   const [auth, setAuth] = useState<AuthType>({
-    isLogged: false,
+    isLogged: undefined,
     user: {},
   });
-  // const [test, setTest] = useState<AuthType>({
-  //   isAuthenticated: true,
-  //   user: {
-  //     _json: { avatarfull: "url_do_avataru" },
-  //     displayName: "UserDisplayName",
-  //   },
-  // });
 
   useEffect(() => {
     fetchData();
