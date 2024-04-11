@@ -22,11 +22,21 @@
   border-top: 1px solid rgb(var(--dark-tertiary));
 }
 
-.dropdownProfile li {
-  cursor: pointer;
-}
-
 .dropdownProfile ul {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.dropdownActive {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: all 0.5s ease;
+}
+
+.dropdownInactive {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.5rem);
+  transition: all 0.5s ease;
 }

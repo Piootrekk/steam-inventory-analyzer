@@ -13,7 +13,7 @@ const DropMenuContent: React.FC<DropMenuContentProps> = ({ content }) => {
     <>
       {content.map((element, index) => (
         <li key={index}>
-          <div className="flex flex-row ml-6 mr-10 pb-3 px-3 items-center border-b border-black space-x-3">
+          <div className="flex flex-row ml-6 mr-10 pb-3 px-3 items-center border-b border-black space-x-3 cursor-pointer">
             {element.icon && <element.icon size={25} />}
             <span onClick={element.onClick}>{element.text}</span>
           </div>

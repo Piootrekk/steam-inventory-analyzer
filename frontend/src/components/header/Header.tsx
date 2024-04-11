@@ -3,7 +3,7 @@ import { SlArrowDown } from "react-icons/sl";
 import { useAuthContext } from "../../context/AuthContext";
 import { baseBackendURL } from "../../env";
 import DropDownMenu from "../reusable/DropDownMenu";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import DropMenuContent from "../reusable/DropMenuContent";
 import { MenuItems } from "./MenuItems";
 
@@ -17,7 +17,9 @@ const Authorization = () => {
   const { auth } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => {
+  const toggleMenu: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsOpen(!isOpen);
   };
 
@@ -40,6 +42,7 @@ const Authorization = () => {
         </button>
         <DropDownMenu
           isOpen={isOpen}
+          setIsOpen={setIsOpen}
           elements={[<DropMenuContent content={MenuItems} />]}
         />
       </>
