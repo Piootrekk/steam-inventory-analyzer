@@ -1,6 +1,6 @@
 // import ApiTest from "./components/ApiTest";
 import { useEffect, useState } from "react";
-import Header from "./components/Header";
+import Header from "./components/header/Header";
 import { AuthType } from "./types/authType";
 import { fetchApiJson } from "./utils/fetchApi";
 import { AuthContext } from "./context/AuthContext";
@@ -31,11 +31,11 @@ const App = () => {
     return <div>Loading...</div>;
   } else {
     return (
-      <React.StrictMode>
-        <AuthContext.Provider value={auth}>
+      <AuthContext.Provider value={{ auth, setAuth }}>
+        <React.StrictMode>
           <Header />
-        </AuthContext.Provider>
-      </React.StrictMode>
+        </React.StrictMode>
+      </AuthContext.Provider>
     );
   }
 };

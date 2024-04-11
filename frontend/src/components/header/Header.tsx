@@ -1,9 +1,11 @@
 import { FaSteam } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
-import { useAuthContext } from "../context/AuthContext";
-import { baseBackendURL } from "../env";
-import DropDownMenu from "./DropDownMenu";
+import { useAuthContext } from "../../context/AuthContext";
+import { baseBackendURL } from "../../env";
+import DropDownMenu from "../reusable/DropDownMenu";
 import { useState } from "react";
+import DropMenuContent from "../reusable/DropMenuContent";
+import { MenuItems } from "./MenuItems";
 
 const handleLogin = async () => {
   window.location.href = `${baseBackendURL}/login-v2`;
@@ -12,7 +14,7 @@ const handleLogin = async () => {
 export type HeaderProps = {};
 
 const Authorization = () => {
-  const auth = useAuthContext();
+  const { auth } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -27,7 +29,7 @@ const Authorization = () => {
           onClick={toggleMenu}
         >
           <span>{auth.user.displayName}</span>
-          <div className="h-10 w-10 mx-3">
+          <div className="h-12 w-12 mx-3">
             <img
               src={auth.user._json.avatarfull}
               alt="Steam avatar"
@@ -36,10 +38,13 @@ const Authorization = () => {
           </div>
           <SlArrowDown className="w-3 h-3" />
         </button>
-        <DropDownMenu isOpen={isOpen} />
+        <DropDownMenu
+          isOpen={isOpen}
+          elements={[<DropMenuContent content={MenuItems} />]}
+        />
       </>
     );
-  } else if (!auth.isLogged) {
+  } else if (auth.isLogged === false) {
     return (
       <>
         <span className="mx-3">Login with:</span>
@@ -55,7 +60,7 @@ const Authorization = () => {
 const Header: React.FC<HeaderProps> = () => {
   return (
     <header>
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800 lg:h-16">
         <div className="flex flex-wrap justify-between items-center mx-auto  max-w-screen-xl ">
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white ">
             Price Analyzer

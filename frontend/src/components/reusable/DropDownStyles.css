@@ -1,0 +1,32 @@
+.dropdownProfile {
+  position: absolute;
+  top: 1.77rem;
+  right: -1.2rem;
+  background-color: rgb(var(--dark-primary));
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(var(--dark-tertiary));
+  z-index: 10;
+}
+
+.dropdownProfile::before {
+  content: "";
+  position: absolute;
+  top: -0.55rem;
+  right: 1rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: rgb(var(--dark-primary));
+  transform: rotate(45deg);
+  border-left: 1px solid rgb(var(--dark-tertiary));
+  border-top: 1px solid rgb(var(--dark-tertiary));
+}
+
+.dropdownProfile li {
+  cursor: pointer;
+}
+
+.dropdownProfile ul {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
