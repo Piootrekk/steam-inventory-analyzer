@@ -1,11 +1,10 @@
-// import ApiTest from "./components/ApiTest";
 import { useEffect, useState } from "react";
-import Header from "./components/header/Header";
 import { AuthType } from "./types/authType";
 import { fetchApiJson } from "./utils/fetchApi";
 import { AuthContext } from "./context/AuthContext";
 import { baseBackendURL } from "./env";
-import React from "react";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/router";
 
 const App = () => {
   const [auth, setAuth] = useState<AuthType>({
@@ -27,14 +26,12 @@ const App = () => {
     }
   };
 
-  if (auth === null) {
+  if (auth === undefined) {
     return <div>Loading...</div>;
   } else {
     return (
       <AuthContext.Provider value={{ auth, setAuth }}>
-        <React.StrictMode>
-          <Header />
-        </React.StrictMode>
+        <RouterProvider router={router} />
       </AuthContext.Provider>
     );
   }

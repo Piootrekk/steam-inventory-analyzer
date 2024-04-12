@@ -2,10 +2,9 @@ import { FaSteam } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
 import { useAuthContext } from "../../context/AuthContext";
 import { baseBackendURL } from "../../env";
-import DropDownMenu from "../reusable/DropDownMenu";
+import DropDownMenu from "../reusable/DropMenu/DropDownMenu";
 import { MouseEventHandler, useState } from "react";
-import DropMenuContent from "../reusable/DropMenuContent";
-import { MenuItems } from "./MenuItems";
+import DropMenuContent from "./DropContentHeader";
 
 const handleLogin = async () => {
   window.location.href = `${baseBackendURL}/login-v2`;
@@ -43,7 +42,7 @@ const Authorization = () => {
         <DropDownMenu
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          elements={[<DropMenuContent content={MenuItems} />]}
+          elements={[<DropMenuContent />]}
         />
       </>
     );
