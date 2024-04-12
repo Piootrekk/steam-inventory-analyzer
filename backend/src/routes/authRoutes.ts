@@ -5,20 +5,25 @@ import { config } from "dotenv";
 config();
 const router = Router();
 
-// KIEDYŚ TRZEBA TO ZMIENIĆ NA DYNAMICZNE POBIERANIE URL BACKENDU
-let GLOBAL_REFER: string = "http://localhost:3000";
+let GLOBAL_REFER = "";
 
 router.get("/logout", (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
-    return res.status(401).json({ message: "You are not logged in" });
+    return res
+      .status(401)
+      .json({ success: false, message: "You are not logged in" });
   }
   req.logout({}, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ messege: "Error logging out" });
+      return res
+        .status(500)
+        .json({ success: false, messege: "Error logging out" });
     }
     res.clearCookie("sessionId");
-    return res.status(200).json({ message: "Logged out succesfully! " });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged out succesfully! " });
   });
 });
 
@@ -34,7 +39,10 @@ router.get("/login-v2", (req: Request, res) => {
     res.redirect(GLOBAL_REFER);
   } else {
     req.headers.referer;
-    GLOBAL_REFER = req.headers.referer!;
+    GLOBAL_REFER = req.headers.referer
+      ? req.headers.referer
+      : process.env.BACKEND_URL!;
+    console.log("GLOBAL REFER: ", GLOBAL_REFER);
     res.redirect("/login");
   }
 });
@@ -55,7 +63,7 @@ router.get("/protected", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/login-error", (_, res) => {
-  return res.status(401).json({ message: "Login failed 😭" });
+  return res.status(401).json({ success: false, message: "Failed to login" });
 });
 
 router.get("/is-logged", (req, res) => {
