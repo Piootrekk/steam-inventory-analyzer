@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import useClickOutside from "../../hooks/useClickOutside";
+import useClickOutside from "../../../hooks/useClickOutside";
 import "./DropDownStyles.css";
 
 export type DropDownMenuProps = {

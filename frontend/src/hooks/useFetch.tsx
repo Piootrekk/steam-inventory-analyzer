@@ -2,17 +2,36 @@ import { useState, useEffect } from "react";
 
 export type FetchType = {
   url: string;
+  type?:
+    | "GET"
+    | "POST"
+    | "PUT"
+    | "DELETE"
+    | "PATCH"
+    | "OPTIONS"
+    | "HEAD"
+    | "CONNECT"
+    | "TRACE";
 };
 
-const useFetch = ({ url }: FetchType) => {
+const useFetch = ({ url, type = "GET" }: FetchType) => {
   const [data, setData] = useState<null | unknown>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | unknown>(null);
+  const [promiseInfo, setPromiseInfo] = useState<null | Response>(null);
+  const [trigger, setTrigger] = useState(false);
 
-  const FetchData = async () => {
+  const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: type,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setPromiseInfo(response);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -26,8 +45,18 @@ const useFetch = ({ url }: FetchType) => {
   };
 
   useEffect(() => {
-    FetchData();
-  }, [url]);
-  return { data, isLoading, error };
+    if (trigger) {
+      fetchData();
+      console.log("Fetching data");
+      setTrigger(false);
+    }
+  }, [trigger]);
+
+  const activateFetch = () => {
+    setTrigger(true);
+  };
+
+  return { data, isLoading, error, promiseInfo, activateFetch };
 };
+
 export default useFetch;
