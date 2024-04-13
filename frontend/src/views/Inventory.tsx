@@ -1,7 +1,7 @@
 import Header from "../components/header/Header";
 import Main from "../components/main/Main";
 
-const Home = () => {
+const Inventory = () => {
   return (
     <>
       <Header />
@@ -10,4 +10,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Inventory;

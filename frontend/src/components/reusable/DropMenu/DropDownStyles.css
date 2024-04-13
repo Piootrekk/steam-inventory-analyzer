@@ -1,6 +1,6 @@
 .dropdownProfile {
   position: absolute;
-  top: 1.77rem;
+
   right: -1.2rem;
   background-color: rgb(var(--dark-primary));
   border-radius: 0.5rem;

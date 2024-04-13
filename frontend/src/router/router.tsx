@@ -11,6 +11,10 @@ const router = createBrowserRouter([
     path: "profile",
     element: <Profile />,
   },
+  {
+    path: "inventory",
+    element: <Profile />,
+  },
 ]);
 
 export default router;

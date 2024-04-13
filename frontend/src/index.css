@@ -7,3 +7,9 @@
   --dark-secondary: 30, 41, 59;
   --dark-tertiary: 41, 53, 72;
 }
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: rgb(var(--dark-primary));
+  color: white;
+}

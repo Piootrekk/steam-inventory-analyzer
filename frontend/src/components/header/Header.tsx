@@ -34,7 +34,7 @@ const Authorization = () => {
             <img
               src={auth.user._json.avatarfull}
               alt="Steam avatar"
-              className="h-full w-full rounded-full border border-gray-300"
+              className="size-full  border border-gray-600"
             />
           </div>
           <SlArrowDown className="w-3 h-3" />
@@ -48,12 +48,12 @@ const Authorization = () => {
     );
   } else if (auth.isLogged === false) {
     return (
-      <>
+      <div className="flex items-center focus:outline-none">
         <span className="mx-3">Login with:</span>
         <button className="h-10 w-10" onClick={handleLogin}>
           <FaSteam className="w-full h-full" />
         </button>
-      </>
+      </div>
     );
   }
   return <></>;
@@ -61,52 +61,13 @@ const Authorization = () => {
 
 const Header: React.FC<HeaderProps> = () => {
   return (
-    <header>
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800 lg:h-16">
-        <div className="flex flex-wrap justify-between items-center mx-auto  max-w-screen-xl ">
-          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white ">
-            Price Analyzer
-          </span>
-          <div className="flex items-center lg:order-2">
-            <Authorization />
-          </div>
-          <div
-            className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
-            id="mobile-menu-2"
-          >
-            <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-              <li
-                className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-              >
-                Home
-              </li>
-              <li
-                className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-              >
-                Inventory
-              </li>
-              <li
-                className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-              >
-                Items history
-              </li>
-              <li
-                className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-              >
-                Investments
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+    <header className="flex justify-between items-center bg-gray-800 text-white h-20 px-12 border-b-2 border-gray-600">
+      <div>
+        <h1 className="text-4xl font-semibold">Price Analyzer</h1>
+      </div>
+      <div>
+        <Authorization />
+      </div>
     </header>
   );
 };
