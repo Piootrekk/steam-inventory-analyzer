@@ -3,7 +3,7 @@ type IsLoadingProps = {
 };
 
 const IsLoading: React.FC<IsLoadingProps> = ({ className }) => {
-  const classes = `mr-3 h-5 w-5 animate-spin text-white ${className}`;
+  const classes = `animate-spin text-white ${className}`;
   return (
     <svg
       className={classes}
@@ -17,7 +17,7 @@ const IsLoading: React.FC<IsLoadingProps> = ({ className }) => {
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"
+        strokeWidth="4"
       ></circle>
       <path
         className="opacity-75"

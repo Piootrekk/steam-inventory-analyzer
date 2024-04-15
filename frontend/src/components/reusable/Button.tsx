@@ -4,7 +4,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const Button = ({ onClick, ...props }: ButtonProps) => {
+const Button = ({ onClick, className, ...props }: ButtonProps) => {
   const rippleRef = useRef<HTMLSpanElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -13,6 +13,9 @@ const Button = ({ onClick, ...props }: ButtonProps) => {
       onClick(event);
     }
   };
+
+  // DO ZREFAKTORYZOWANIA KIEDYŚTAM NA BARDZIEJ REACTOWY KOD
+
   const rippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
     const btn = event.currentTarget;
 
@@ -40,8 +43,8 @@ const Button = ({ onClick, ...props }: ButtonProps) => {
     <button
       {...props}
       type="button"
-      className="rounded px-5 py-3 min-w-max overflow-hidden shadow relative bg-blue-700
-       text-white hover:bg-opacity-80 border border-blue-950 focus:outline-none "
+      className={`rounded-xl overflow-hidden shadow relative bg-blue-700
+      text-white hover:bg-opacity-80 border border-blue-950 focus:outline-none ${className}`}
       onClick={handleClick}
     ></button>
   );

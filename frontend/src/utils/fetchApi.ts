@@ -1,8 +1,11 @@
 export const fetchApiJson = async (url: string) => {
-  const response = await fetch(url, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  return await response.json();
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
 };

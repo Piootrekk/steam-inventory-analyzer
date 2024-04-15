@@ -15,9 +15,9 @@ export type FetchType = {
 };
 
 const useFetch = ({ url, type = "GET" }: FetchType) => {
-  const [data, setData] = useState<null | unknown>(null);
+  const [data, setData] = useState<null | any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null | unknown>(null);
+  const [error, setError] = useState<null | any>(null);
   const [promiseInfo, setPromiseInfo] = useState<null | Response>(null);
   const [trigger, setTrigger] = useState(false);
 
@@ -50,7 +50,7 @@ const useFetch = ({ url, type = "GET" }: FetchType) => {
       console.log("Fetching data");
       setTrigger(false);
     }
-  }, [trigger]);
+  });
 
   const activateFetch = () => {
     setTrigger(true);
