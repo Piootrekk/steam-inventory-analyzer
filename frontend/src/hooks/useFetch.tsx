@@ -1,25 +1,24 @@
 import { useState, useEffect } from "react";
 
-export type FetchType = {
+type FetchType = {
   url: string;
-  type?:
-    | "GET"
-    | "POST"
-    | "PUT"
-    | "DELETE"
-    | "PATCH"
-    | "OPTIONS"
-    | "HEAD"
-    | "CONNECT"
-    | "TRACE";
+  type?: string;
 };
 
-const useFetch = ({ url, type = "GET" }: FetchType) => {
-  const [data, setData] = useState<null | any>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null | any>(null);
-  const [promiseInfo, setPromiseInfo] = useState<null | Response>(null);
-  const [trigger, setTrigger] = useState(false);
+type FetchData<T> = {
+  data: T | null;
+  isLoading: boolean;
+  error: any | null;
+  promiseInfo: Response | null;
+  activateFetch: () => void;
+};
+
+const useFetch = <T,>({ url, type = "GET" }: FetchType): FetchData<T> => {
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<any | null>(null);
+  const [promiseInfo, setPromiseInfo] = useState<Response | null>(null);
+  const [trigger, setTrigger] = useState<boolean>(false);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -50,7 +49,7 @@ const useFetch = ({ url, type = "GET" }: FetchType) => {
       console.log("Fetching data");
       setTrigger(false);
     }
-  });
+  }, [trigger]);
 
   const activateFetch = () => {
     setTrigger(true);
