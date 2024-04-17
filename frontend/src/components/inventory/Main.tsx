@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Button from "../reusable/Button";
 import { IoMdCodeDownload } from "react-icons/io";
 import useFetch from "../../hooks/useFetch";
@@ -10,9 +9,12 @@ import {
   mapUniqueAssets,
   processFinalAssets,
 } from "./methodsInventory";
+import Card from "../reusable/Card";
+import { useState } from "react"; // Import useState hook
 
 const Main = () => {
   const [selectedGame, setSelectedGame] = useState("");
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null); // State to track hovered item
 
   const games = ["tf2", "cs2", "rust"];
 
@@ -44,21 +46,21 @@ const Main = () => {
       <div className="order-1">
         <h1 className="text-4xl text-center mt-5">Fetch your inventory</h1>
       </div>
-      <div className="flex justify-center pt-12 pb-6 gap-5 order-2">
+      <div className="flex justify-center pt-12 pb-6 gap-5 order-2 mx-12">
         {games.map((game) => (
           <Button
             key={game}
             className={`w-full px-4 py-3 items-center flex justify-center ${
-              selectedGame === game ? "bg-blue-500" : "bg-gray-300"
+              selectedGame === game ? "bg-blue-500" : "bg-gray-700"
             }`}
             onClick={() => handleGameChange(game)}
             disabled={isLoading}
           >
-            <span className="">
+            <span className="flex flex-row gap-3">
               {isLoading && selectedGame === game ? (
-                <IsLoading className="size-8" />
+                <IsLoading className="size-6" />
               ) : (
-                <IoMdCodeDownload className="size-8" />
+                <IoMdCodeDownload className="size-6" />
               )}
               {game.toUpperCase()}
             </span>
@@ -66,33 +68,37 @@ const Main = () => {
         ))}
       </div>
       {data && (
-        <ContentDetails
-          className="order-3 "
-          detatails={{ totalQuantity: data?.total_inventory_count }}
-        >
-          <>
-            {error && <h1>Error: {error}</h1>}
-            {!isLoading && (
-              <pre className="overflow-x-hidden whitespace-pre-wrap">
-                {JSON.stringify(processedData, null, 2)}
-              </pre>
-            )}
-          </>
-        </ContentDetails>
+        <>
+          <div className="order-2 flex justify-center flex-col">
+            <ContentDetails
+              detatails={{
+                totalQuantity: data.total_inventory_count,
+                game: selectedGame,
+                status: error ? `failed ${error.message}` : "successfully",
+                selectedItem: hoveredItem,
+              }}
+            ></ContentDetails>
+          </div>
+          <div className="flex flex-wrap flex-row gap-5 items-center justify-center px-10 py-10 order-3">
+            {processedData.map((item, index) => (
+              <Card
+                key={index}
+                className=" text-white  hover:scale-110 transition-all hover:opacity-80 duration-300"
+                onMouseEnter={() => setHoveredItem(item.market_hash_name)}
+              >
+                <img
+                  src={`https://community.cloudflare.steamstatic.com/economy/image/${item.icon_url}`}
+                  alt="Unknown Item"
+                  className="text-center"
+                />
+                <span>{item.amount}</span>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
 };
 
 export default Main;
-
-// <div className="flex flex-wrap flex-row gap-5 items-center px-10 py-10 order-2">
-//         {cards.map((card, index) => (
-//           <Card
-//             key={index}
-//             className="w-24 h-24 text-white text-4xl hover:scale-110 transition-all hover:opacity-80 duration-300"
-//           >
-//             <h1>{card}</h1>
-//           </Card>
-//         ))}
-//       </div>
