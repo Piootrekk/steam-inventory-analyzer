@@ -50,7 +50,7 @@ export default {
     animation: {
       "popping-up": "popp 1s ease-out forwards",
       spin: "spin 1s linear infinite",
-      ripple: "ripple 500ms linear",
+      ripple: "ripple 2000ms linear",
     },
   },
   plugins: [],

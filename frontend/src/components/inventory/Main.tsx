@@ -1,8 +1,9 @@
-import Button from "../reusable/Button";
 import { IoMdCodeDownload } from "react-icons/io";
 import useFetch from "../../hooks/useFetch";
 import IsLoading from "../reusable/IsLoading";
 import ContentDetails from "./Content";
+import ButtonRipple from "../reusable/Button/ButtonRipple";
+import Ripple from "../reusable/Button/Ripple";
 import {
   Item,
   ItemsResponse,
@@ -39,6 +40,7 @@ const Main = () => {
   const handleGameChange = (game: string) => {
     setSelectedGame(game);
     activateFetch();
+    setHoveredItem(null);
   };
 
   return (
@@ -48,7 +50,7 @@ const Main = () => {
       </div>
       <div className="flex justify-center pt-12 pb-6 gap-5 order-2 mx-12">
         {games.map((game) => (
-          <Button
+          <ButtonRipple
             key={game}
             className={`w-full px-4 py-3 items-center flex justify-center ${
               selectedGame === game ? "bg-blue-500" : "bg-gray-700"
@@ -56,6 +58,7 @@ const Main = () => {
             onClick={() => handleGameChange(game)}
             disabled={isLoading}
           >
+            <Ripple duration={2000} />
             <span className="flex flex-row gap-3">
               {isLoading && selectedGame === game ? (
                 <IsLoading className="size-6" />
@@ -64,7 +67,7 @@ const Main = () => {
               )}
               {game.toUpperCase()}
             </span>
-          </Button>
+          </ButtonRipple>
         ))}
       </div>
       {data && (
@@ -83,15 +86,17 @@ const Main = () => {
             {processedData.map((item, index) => (
               <Card
                 key={index}
-                className=" text-white  hover:scale-110 transition-all hover:opacity-80 duration-300"
+                className=" text-white  hover:scale-110 transition-all hover:opacity-80 duration-300 w-24 h-32 w-max-24 h-max-30 flex flex-row "
                 onMouseEnter={() => setHoveredItem(item.market_hash_name)}
               >
                 <img
                   src={`https://community.cloudflare.steamstatic.com/economy/image/${item.icon_url}`}
                   alt="Unknown Item"
-                  className="text-center"
+                  className="text-center order-1 size-[94px]"
                 />
-                <span>{item.amount}</span>
+                <span className="flex text-bottom items-end order-2">
+                  {item.amount}
+                </span>
               </Card>
             ))}
           </div>

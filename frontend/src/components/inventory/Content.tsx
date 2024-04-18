@@ -31,9 +31,14 @@ const ContentDetails: React.FC<ContentDetailsProps> = ({
     <div
       className={`border-gray-600 bg-gray-800 rounded-xl min-w-max mx-12 px-4 overflow-hidden max-w-full flex-col ${className}`}
     >
-      <div className="flex flex-col justify-center items-center border-b border-gray-600 mb-4 py-2 ">
+      <div className="flex flex-col justify-center items-center border-b border-t border-gray-600 my-4 py-2 ">
         <h2 className="text-2xl">Inventory fetched {detatails?.status}</h2>
         <p className="text-xl">Details:</p>
+        {detatails?.game ? (
+          <p className="text-base">Game: {detatails?.game.toUpperCase()}</p>
+        ) : (
+          <p className="text-base">Game: No game selected</p>
+        )}
         {detatails?.totalQuantity ? (
           <p className="text-base">
             Total quantity: {detatails?.totalQuantity}
