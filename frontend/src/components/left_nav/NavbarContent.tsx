@@ -45,17 +45,19 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ showIconsOnly }) => {
         <li
           key={index}
           onClick={element.onClick}
-          className={`p-4 text-xl flex flex-row items-center overflow-hidden gap-x-2 cursor-pointer hover:bg-gray-700 relative
+          className={`p-4 text-xl flex flex-row items-center overflow-hidden gap-x-2 cursor-pointer hover:bg-gray-700 
+          relative min-h-[60px]
           `}
         >
           <Ripple duration={500} velocity={500} />
-          {showIconsOnly ? (
-            element.icon && <element.icon size={22} />
-          ) : (
-            <>
-              {element.icon && <element.icon size={22} />}
+          <div className="size-[22px]">
+            {element.icon && <element.icon size={22} />}
+          </div>
+
+          {!showIconsOnly && (
+            <span className={`flex-wrap overflow-hidden whitespace-nowrap`}>
               {element.text}
-            </>
+            </span>
           )}
         </li>
       ))}

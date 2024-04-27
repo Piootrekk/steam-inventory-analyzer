@@ -18,12 +18,20 @@ export default {
       },
     },
     keyframes: {
-      delayedShow: {
-        from: {
-          visibility: "hidden",
+      leftRotate: {
+        "0%": {
+          transform: "rotate(180deg)",
         },
-        to: {
-          visibility: "visible",
+        "100%": {
+          transform: "rotate(0deg)",
+        },
+      },
+      rightRotate: {
+        "0%": {
+          transform: "rotate(0deg)",
+        },
+        "100%": {
+          transform: "rotate(180deg)",
         },
       },
       popp: {
@@ -56,6 +64,8 @@ export default {
       },
     },
     animation: {
+      "left-rotate": "leftRotate 300ms linear forwards",
+      "right-rotate": "rightRotate 300ms linear forwards",
       "popping-up": "popp 1s ease-out forwards",
       "popping-down": "popp 1s ease-out reverse forwards",
       spin: "spin 1s linear infinite",

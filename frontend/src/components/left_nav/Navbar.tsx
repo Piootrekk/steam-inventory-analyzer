@@ -11,20 +11,25 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen text-white order-1 bg-gray-800 py-5 
-       `}
+      className={`flex flex-col min-h-screen text-white order-1 bg-gray-800 py-5 duration-300 ${
+        !showIconsOnly ? "w-64" : "w-16"
+      } `}
     >
       <div
-        className="p-4 flex flex-row items-center gap-x-2 font-bold"
+        className="p-4 flex flex-row items-center gap-x-2 font-bold cursor-pointer min-h-[64px]"
         onClick={toggleIconsOnly}
       >
         {!showIconsOnly && (
           <>
-            <FaArrowRightFromBracket size={20} className="rotate-180" />
-            <h1 className="text-2xl ">Dashboard</h1>
+            <div className="w-6 h-6">
+              <FaArrowRightFromBracket className=" w-6 h-6 animate-right-rotate" />
+            </div>
+            <h1 className="text-2xl">Dashboard</h1>
           </>
         )}
-        {showIconsOnly && <FaArrowRightFromBracket size={20} />}
+        {showIconsOnly && (
+          <FaArrowRightFromBracket className="w-6 h-6 animate-left-rotate rotate-0" />
+        )}
       </div>
       <div className="flex-grow">
         <nav className="flex flex-col space-y-4">
