@@ -5,6 +5,7 @@ import { baseBackendURL } from "../../env";
 import DropDownMenu from "../reusable/DropMenu/DropDownMenu";
 import { MouseEventHandler, useState } from "react";
 import DropMenuContent from "./DropContentHeader";
+import { useNavigate } from "react-router-dom";
 
 const handleLogin = async () => {
   window.location.href = `${baseBackendURL}/login-v2`;
@@ -60,10 +61,16 @@ const Authorization = () => {
 };
 
 const Header: React.FC<HeaderProps> = () => {
+  const navigate = useNavigate();
   return (
     <header className="flex justify-between items-center bg-gray-800 text-white h-20 px-12 border-b-2 border-gray-600">
       <div>
-        <h1 className="text-4xl font-semibold">Price Analyzer</h1>
+        <h1
+          className="text-4xl font-semibold cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          Price Analyzer
+        </h1>
       </div>
       <div>
         <Authorization />

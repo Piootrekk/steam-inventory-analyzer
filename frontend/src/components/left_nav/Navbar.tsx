@@ -1,42 +1,19 @@
-type NavbarProps = {};
+type NavbarProps = {
+  children?: React.ReactNode;
+};
 
-const Navbar: React.FC<NavbarProps> = () => {
+const Navbar: React.FC<NavbarProps> = ({ children }) => {
   return (
-    <nav
-      className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
-      id="mobile-menu-2"
-    >
-      <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-        <li
-          className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-        >
-          Home
-        </li>
-        <li
-          className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-        >
-          Inventory
-        </li>
-        <li
-          className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-        >
-          Items history
-        </li>
-        <li
-          className="block py-2 pr-4 pl-3 text-white rounded
-                bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0
-                dark:text-white"
-        >
-          Investments
-        </li>
-      </ul>
-    </nav>
+    <div className="flex flex-col min-h-screen text-white order-1 bg-gray-800 py-5">
+      <div className="p-4">
+        <h1 className="text-2xl font-bold pb-5">Dashboard</h1>
+      </div>
+      <div className="flex-grow">
+        <nav className="flex flex-col space-y-4">
+          <ul>{children}</ul>
+        </nav>
+      </div>
+    </div>
   );
 };
 

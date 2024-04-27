@@ -11,11 +11,12 @@ import {
   processFinalAssets,
 } from "./methodsInventory";
 import Card from "../reusable/Card";
-import { useState } from "react"; // Import useState hook
+import { useMemo, useState } from "react";
+import ContentWrapper from "../wrapper/ContentWrapper";
 
 const Main = () => {
   const [selectedGame, setSelectedGame] = useState("");
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null); // State to track hovered item
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const games = ["tf2", "cs2", "rust"];
 
@@ -32,10 +33,9 @@ const Main = () => {
   }));
 
   const uniqueClassidMap = mapUniqueAssets(data as ItemsResponse);
-  const processedData = processFinalAssets(
-    uniqueClassidMap,
-    itemsDescriptions || []
-  );
+  const processedData = useMemo(() => {
+    return processFinalAssets(uniqueClassidMap, itemsDescriptions || []);
+  }, [uniqueClassidMap, itemsDescriptions]);
 
   const handleGameChange = (game: string) => {
     setSelectedGame(game);
@@ -44,7 +44,7 @@ const Main = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col order-2 w-full">
       <div className="order-1">
         <h1 className="text-4xl text-center mt-5">Fetch your inventory</h1>
       </div>
@@ -82,24 +82,29 @@ const Main = () => {
               }}
             ></ContentDetails>
           </div>
-          <div className="flex flex-wrap flex-row gap-5 items-center justify-center px-10 py-10 order-3">
-            {processedData.map((item, index) => (
-              <Card
-                key={index}
-                className=" text-white  hover:scale-110 transition-all hover:opacity-80 duration-300 w-24 h-32 w-max-24 h-max-30 flex flex-row "
-                onMouseEnter={() => setHoveredItem(item.market_hash_name)}
-              >
-                <img
-                  src={`https://community.cloudflare.steamstatic.com/economy/image/${item.icon_url}`}
-                  alt="Unknown Item"
-                  className="text-center order-1 size-[94px]"
-                />
-                <span className="flex text-bottom items-end order-2">
-                  {item.amount}
-                </span>
-              </Card>
-            ))}
-          </div>
+          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center m-10 p-10 order-3">
+            {processedData.length > 0 &&
+              processedData.map((item, index) => (
+                <Card
+                  key={index}
+                  className={` text-white  hover:scale-110 transition-all hover:opacity-80 duration-300 w-24 h-32 w-max-24 h-max-30 flex flex-row 
+                `}
+                  onMouseEnter={() => setHoveredItem(item.market_hash_name)}
+                >
+                  <img
+                    src={`https://community.cloudflare.steamstatic.com/economy/image/${item.icon_url}`}
+                    alt="Unknown Item"
+                    className="text-center order-1 size-[94px]"
+                  />
+                  <span className="flex text-bottom items-end order-2">
+                    {item.amount}
+                  </span>
+                </Card>
+              ))}
+            {processedData.length === 0 && (
+              <p className="text-2xl">No items found 😭</p>
+            )}
+          </ContentWrapper>
         </>
       )}
     </div>

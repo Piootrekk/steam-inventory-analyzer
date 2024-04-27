@@ -1,4 +1,3 @@
-import { IconType } from "react-icons";
 import { CiLogout, CiSettings } from "react-icons/ci";
 import { VscAccount } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +5,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import { baseBackendURL } from "../../env";
 import { useEffect } from "react";
-
-export type DropMenuContentProps = {
-  content?: {
-    icon?: IconType;
-    text: string;
-    onClick: () => void;
-  }[];
-};
+import { DropMenuContentProps } from "../../types/menuTypes";
 
 const DropContentHeader = () => {
   const navigate = useNavigate();
@@ -22,7 +14,7 @@ const DropContentHeader = () => {
     url: `${baseBackendURL}/logout`,
   });
 
-  const MenuItems = [
+  const MenuItems: DropMenuContentProps[] = [
     {
       icon: VscAccount,
       text: "Profile",
