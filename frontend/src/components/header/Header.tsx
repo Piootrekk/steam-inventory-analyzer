@@ -2,7 +2,7 @@ import { FaSteam } from "react-icons/fa";
 import { SlArrowDown } from "react-icons/sl";
 import { useAuthContext } from "../../context/AuthContext";
 import { baseBackendURL } from "../../env";
-import DropDownMenu from "../reusable/DropMenu/DropDownMenu";
+import DropDownMenu from "../common/DropMenu/DropDownMenu";
 import { MouseEventHandler, useState } from "react";
 import DropMenuContent from "./DropContentHeader";
 import { useNavigate } from "react-router-dom";

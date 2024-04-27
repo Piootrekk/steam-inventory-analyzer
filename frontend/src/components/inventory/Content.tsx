@@ -28,9 +28,7 @@ const ContentDetails: React.FC<ContentDetailsProps> = ({
     }
   };
   return (
-    <div
-      className={` bg-gray-800 rounded-xl mx-10 px-4  flex-col overflow-hidden ${className}`}
-    >
+    <div className={`flex-col overflow-hidden ${className}`}>
       <div className="flex flex-col justify-center items-center  my-4 py-2 ">
         <h2 className="text-2xl">Inventory fetched {detatails?.status}</h2>
         <p className="text-xl">Details:</p>

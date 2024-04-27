@@ -1,16 +1,20 @@
+import { FaHome, FaHistory } from "react-icons/fa";
 import { BsFillBackpack2Fill, BsGraphUpArrow } from "react-icons/bs";
-import { FaHome } from "react-icons/fa";
 import { MdOutlinePriceCheck } from "react-icons/md";
-import { DropMenuContentProps } from "../../types/menuTypes";
 import { useNavigate } from "react-router-dom";
+import Ripple from "../common/Button/Ripple";
 
-const NavbarContent = () => {
+type NavbarContentProps = {
+  showIconsOnly: boolean;
+};
+
+const NavbarContent: React.FC<NavbarContentProps> = ({ showIconsOnly }) => {
   const navigate = useNavigate();
 
-  const MenuItems: DropMenuContentProps[] = [
+  const MenuItems = [
     {
       icon: FaHome,
-      text: "Dashboard",
+      text: "Home",
       onClick: () => navigate("/"),
     },
     {
@@ -28,6 +32,11 @@ const NavbarContent = () => {
       text: "Item Price",
       onClick: () => console.log("Item Price"),
     },
+    {
+      icon: FaHistory,
+      text: "Market data",
+      onClick: () => console.log("History"),
+    },
   ];
 
   return (
@@ -36,10 +45,18 @@ const NavbarContent = () => {
         <li
           key={index}
           onClick={element.onClick}
-          className="p-4 text-xl flex flex-row gap-x-2 cursor-pointer hover:bg-gray-700"
+          className={`p-4 text-xl flex flex-row items-center overflow-hidden gap-x-2 cursor-pointer hover:bg-gray-700 relative
+          `}
         >
-          {element.icon && <element.icon size={25} />}
-          {element.text}
+          <Ripple duration={500} velocity={500} />
+          {showIconsOnly ? (
+            element.icon && <element.icon size={22} />
+          ) : (
+            <>
+              {element.icon && <element.icon size={22} />}
+              {element.text}
+            </>
+          )}
         </li>
       ))}
     </>

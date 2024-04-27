@@ -1,18 +1,19 @@
 import { IoMdCodeDownload } from "react-icons/io";
 import useFetch from "../../hooks/useFetch";
-import IsLoading from "../reusable/IsLoading";
+import IsLoading from "../common/IsLoading";
 import ContentDetails from "./Content";
-import ButtonRipple from "../reusable/Button/ButtonRipple";
-import Ripple from "../reusable/Button/Ripple";
+import ButtonRipple from "../common/Button/ButtonRipple";
+import Ripple from "../common/Button/Ripple";
 import {
   Item,
   ItemsResponse,
   mapUniqueAssets,
   processFinalAssets,
 } from "./methodsInventory";
-import Card from "../reusable/Card";
+import Card from "../common/Card";
 import { useMemo, useState } from "react";
 import ContentWrapper from "../wrapper/ContentWrapper";
+import { baseBackendURL } from "../../env";
 
 const Main = () => {
   const [selectedGame, setSelectedGame] = useState("");
@@ -21,7 +22,7 @@ const Main = () => {
   const games = ["tf2", "cs2", "rust"];
 
   const { data, isLoading, error, activateFetch } = useFetch<ItemsResponse>({
-    url: `http://localhost:3000/items/${selectedGame}`,
+    url: `${baseBackendURL}/items/${selectedGame}`,
   });
 
   const itemsDescriptions = data?.descriptions?.map((item: Item) => ({
@@ -72,7 +73,7 @@ const Main = () => {
       </div>
       {data && (
         <>
-          <div className="order-2 flex justify-center flex-col">
+          <ContentWrapper className="order-2 flex justify-center flex-col m-10">
             <ContentDetails
               detatails={{
                 totalQuantity: data.total_inventory_count,
@@ -81,8 +82,8 @@ const Main = () => {
                 selectedItem: hoveredItem,
               }}
             ></ContentDetails>
-          </div>
-          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center m-10 p-10 order-3">
+          </ContentWrapper>
+          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center mx-10 mb-4 px-5 py-10 order-3">
             {processedData.length > 0 &&
               processedData.map((item, index) => (
                 <Card

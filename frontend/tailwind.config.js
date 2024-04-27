@@ -18,6 +18,14 @@ export default {
       },
     },
     keyframes: {
+      delayedShow: {
+        from: {
+          visibility: "hidden",
+        },
+        to: {
+          visibility: "visible",
+        },
+      },
       popp: {
         from: {
           opacity: 0,
@@ -49,8 +57,14 @@ export default {
     },
     animation: {
       "popping-up": "popp 1s ease-out forwards",
+      "popping-down": "popp 1s ease-out reverse forwards",
       spin: "spin 1s linear infinite",
       ripple: "ripple 2000ms linear",
+      "ripple-500": "ripple 500ms linear",
+      "ripple-1000": "ripple 1000ms linear",
+      "ripple-1500": "ripple 1500ms linear",
+      "ripple-3000": "ripple 3000ms linear",
+      "text-appear": "0s linear 2.3s forwards delayedShow ",
     },
   },
   plugins: [],

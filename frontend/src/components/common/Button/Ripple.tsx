@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 type RippleProps = {
   duration: number;
+  velocity?: 500 | 1000 | 1500 | 3000;
 };
 
 type RippleType = {
@@ -28,7 +29,7 @@ const useDebouncedRippleCleanUp = (
   }, [rippleCount, duration, cleanUpFunction]);
 };
 
-const Ripple: React.FC<RippleProps> = ({ duration }) => {
+const Ripple: React.FC<RippleProps> = ({ duration, velocity }) => {
   const [rippleArray, setRippleArray] = useState<RippleType[]>([]);
   useDebouncedRippleCleanUp(rippleArray.length, duration, () => {
     setRippleArray([]);
@@ -49,6 +50,20 @@ const Ripple: React.FC<RippleProps> = ({ duration }) => {
     setRippleArray([...rippleArray, newRipple]);
   };
 
+  const rippleEffect = () => {
+    if (velocity === undefined) {
+      return "animate-ripple";
+    } else if (velocity === 500) {
+      return "animate-ripple-500";
+    } else if (velocity === 1000) {
+      return "animate-ripple-1000";
+    } else if (velocity === 1500) {
+      return "animate-ripple-1500";
+    } else if (velocity === 3000) {
+      return "animate-ripple-3000";
+    }
+  };
+
   return (
     <div
       className="absolute top-0 right-0 bottom-0 left-0"
@@ -64,7 +79,7 @@ const Ripple: React.FC<RippleProps> = ({ duration }) => {
               width: ripple.size,
               height: ripple.size,
             }}
-            className="absolute rounded-full scale-0 animate-ripple bg-slate-300 pointer-events-none"
+            className={`absolute rounded-full scale-0 ${rippleEffect()} bg-slate-300 pointer-events-none`}
           />
         ))}
     </div>
