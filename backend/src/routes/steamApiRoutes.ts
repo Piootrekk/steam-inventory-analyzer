@@ -2,6 +2,9 @@ import { Router, Request, Response } from "express";
 import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
 import { fetchAxiosResponse } from "../utils/fetchResponse";
 import { AuthenticatedUser } from "../types/AuthenticatedUser";
+import { Item, ItemsResponse } from "../types/InventoryTypes";
+import { mapUniqueAssets, processFinalAssets } from "../utils/InventoryUtils";
+import { gamesMapper } from "../utils/gamesMapper";
 
 const router = Router();
 
@@ -58,18 +61,11 @@ router.get("/friends", ensureAuthenticated, async (req, res) => {
 });
 
 router.get("/items/:game", ensureAuthenticated, async (req, res) => {
-  const allowedGames = ["rust", "cs2", "tf2"];
   const requestedGame = req.params.game.toLowerCase();
-  if (!allowedGames.includes(requestedGame)) {
+  const gameId = gamesMapper(requestedGame);
+  if (!gameId) {
     return res.status(404).json({ message: "Something wrong" });
   }
-  const GameIdMap = new Map([
-    ["rust", 252490],
-    ["cs2", 730],
-    ["tf2", 440],
-  ]);
-
-  const gameId = GameIdMap.get(requestedGame);
   const user = req.user as AuthenticatedUser;
   const url =
     `https://steamcommunity.com/inventory/${user?._json.steamid}/${gameId}/2?` +
@@ -81,6 +77,52 @@ router.get("/items/:game", ensureAuthenticated, async (req, res) => {
   if (response.error) {
     return res.status(500).json({ message: "Something went wrong" });
   }
+  res.json(response);
+});
+
+router.get("/v2/items/:game", ensureAuthenticated, async (req, res) => {
+  const requestedGame = req.params.game.toLowerCase();
+  const gameId = gamesMapper(requestedGame);
+  if (!gameId) {
+    return res.status(404).json({ message: "Something wrong" });
+  }
+  const user = req.user as AuthenticatedUser;
+  const url =
+    `https://steamcommunity.com/inventory/${user?._json.steamid}/${gameId}/2?` +
+    new URLSearchParams({
+      l: "english",
+      count: "5000",
+    });
+  const response = (await fetchAxiosResponse(url)) as ItemsResponse;
+  if (!response.success) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+  const itemsDescriptions = response?.descriptions?.map((item: Item) => ({
+    classid: item.classid,
+    market_hash_name: item.market_hash_name,
+    icon_url: item.icon_url,
+    name_color: item.name_color,
+    marketable: item.marketable,
+  }));
+  const uniqueClassidMap = mapUniqueAssets(response as ItemsResponse);
+  const finalItems = processFinalAssets(
+    uniqueClassidMap,
+    itemsDescriptions || []
+  );
+  res.json(finalItems);
+});
+
+// https://steamcommunity.com/profiles/76561199648107937/inventory/json/730/2
+// NIE DZIAŁA BEZ INWAZYJNEGO steamLoginSecure
+router.get("/v3/items/:game", ensureAuthenticated, async (req, res) => {
+  const requestedGame = req.params.game.toLowerCase();
+  const gameId = gamesMapper(requestedGame);
+  if (!gameId) {
+    return res.status(404).json({ message: "Something wrong" });
+  }
+  const user = req.user as AuthenticatedUser;
+  const url = `https://steamcommunity.com/profiles/${user?._json.steamid}/inventory/json/${gameId}/2`;
+  const response = await fetchAxiosResponse(url);
   res.json(response);
 });
 

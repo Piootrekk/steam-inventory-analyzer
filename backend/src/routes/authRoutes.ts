@@ -5,7 +5,7 @@ import { config } from "dotenv";
 config();
 const router = Router();
 
-let GLOBAL_REFER = "";
+let GLOBAL_REFER = process.env.BACKEND_URL!;
 
 router.get("/logout", (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
