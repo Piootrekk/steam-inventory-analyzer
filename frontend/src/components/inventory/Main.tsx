@@ -4,16 +4,11 @@ import IsLoading from "../common/IsLoading";
 import ContentDetails from "./Content";
 import ButtonRipple from "../common/Button/ButtonRipple";
 import Ripple from "../common/Button/Ripple";
-import {
-  Item,
-  ItemsResponse,
-  mapUniqueAssets,
-  processFinalAssets,
-} from "./methodsInventory";
 import Card from "../common/Card";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import ContentWrapper from "../wrapper/ContentWrapper";
 import { baseBackendURL } from "../../env";
+import { InventoryReturn } from "../../types/inventoryTypes";
 
 const Main = () => {
   const [selectedGame, setSelectedGame] = useState("");
@@ -21,22 +16,9 @@ const Main = () => {
 
   const games = ["tf2", "cs2", "rust"];
 
-  const { data, isLoading, error, activateFetch } = useFetch<ItemsResponse>({
-    url: `${baseBackendURL}/items/${selectedGame}`,
+  const { data, isLoading, error, activateFetch } = useFetch<InventoryReturn>({
+    url: `${baseBackendURL}/v2/items/${selectedGame}`,
   });
-
-  const itemsDescriptions = data?.descriptions?.map((item: Item) => ({
-    classid: item.classid,
-    market_hash_name: item.market_hash_name,
-    icon_url: item.icon_url,
-    name_color: item.name_color,
-    marketable: item.marketable,
-  }));
-
-  const uniqueClassidMap = mapUniqueAssets(data as ItemsResponse);
-  const processedData = useMemo(() => {
-    return processFinalAssets(uniqueClassidMap, itemsDescriptions || []);
-  }, [uniqueClassidMap, itemsDescriptions]);
 
   const handleGameChange = (game: string) => {
     setSelectedGame(game);
@@ -84,8 +66,8 @@ const Main = () => {
             ></ContentDetails>
           </ContentWrapper>
           <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center mx-10 mb-4 px-5 py-10 order-3">
-            {processedData.length > 0 &&
-              processedData.map((item, index) => (
+            {data.items.length > 0 &&
+              data.items.map((item, index) => (
                 <Card
                   key={index}
                   className={` text-white  hover:scale-110 transition-all hover:opacity-80 duration-300 w-24 h-32 w-max-24 h-max-30 flex flex-row 
@@ -102,7 +84,7 @@ const Main = () => {
                   </span>
                 </Card>
               ))}
-            {processedData.length === 0 && (
+            {data.items.length === 0 && (
               <p className="text-2xl">No items found 😭</p>
             )}
           </ContentWrapper>

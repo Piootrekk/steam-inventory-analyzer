@@ -1,4 +1,4 @@
-import { Assets, Item } from "../types/InventoryTypes";
+import { Assets, CombinedItem, Item } from "../types/InventoryTypes";
 
 export const mapUniqueAssets = (data: {
   assets?: Assets[];
@@ -22,7 +22,7 @@ export const mapUniqueAssets = (data: {
 export const processFinalAssets = (
   uniqueClassidMap: Map<string, number>,
   itemsDescriptions: Item[]
-) => {
+): CombinedItem[] => {
   return Array.from(uniqueClassidMap).map(([classid, amount], _) => {
     const correspondingItem = itemsDescriptions.find(
       (item: Item) => item.classid === classid

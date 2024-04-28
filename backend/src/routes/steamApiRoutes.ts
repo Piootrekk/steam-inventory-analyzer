@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
 import { fetchAxiosResponse } from "../utils/fetchResponse";
 import { AuthenticatedUser } from "../types/AuthenticatedUser";
-import { Item, ItemsResponse } from "../types/InventoryTypes";
+import { Item, ItemsResponse, InventoryReturn } from "../types/InventoryTypes";
 import { mapUniqueAssets, processFinalAssets } from "../utils/InventoryUtils";
 import { gamesMapper } from "../utils/gamesMapper";
 
@@ -105,10 +105,16 @@ router.get("/v2/items/:game", ensureAuthenticated, async (req, res) => {
     marketable: item.marketable,
   }));
   const uniqueClassidMap = mapUniqueAssets(response as ItemsResponse);
-  const finalItems = processFinalAssets(
+  const combinedItems = processFinalAssets(
     uniqueClassidMap,
     itemsDescriptions || []
   );
+  const finalItems: InventoryReturn = {
+    items: combinedItems,
+    total_inventory_count: response.total_inventory_count,
+    success: response.success,
+  };
+
   res.json(finalItems);
 });
 
