@@ -21,3 +21,16 @@ export const fetchAxiosResponse = async (url: string) => {
   }
 };
 
+export const fetchAxiosResponsePost = async (url: string, body: any) => {
+  try {
+    const response = await axios({
+      method: "post",
+      url: url,
+      headers: {},
+      data: body,
+    });
+    return response.data;
+  } catch (error: unknown) {
+    return catchErrorResponse(axios, error);
+  }
+};

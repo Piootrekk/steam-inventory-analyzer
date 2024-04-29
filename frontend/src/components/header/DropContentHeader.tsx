@@ -24,7 +24,7 @@ const DropContentHeader = () => {
       icon: CiSettings,
       text: "Settings",
       onClick: () => {
-        console.log("Settings");
+        navigate("/settings");
       },
     },
     {

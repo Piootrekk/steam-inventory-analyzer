@@ -1,6 +1,10 @@
 import { Router } from "express";
-import { fetchAxiosResponse } from "../utils/fetchResponse";
+import {
+  fetchAxiosResponse,
+  fetchAxiosResponsePost,
+} from "../utils/fetchResponse";
 import { gamesMapper } from "../utils/gamesMapper";
+import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
 
 const router = Router();
 
@@ -28,6 +32,18 @@ router.get("/search/:count/:query", async (req, res) => {
   const count = req.params.count;
   const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=${count}&norender=1`;
   const response = await fetchAxiosResponse(url);
+  res.json(response);
+});
+
+// Wymagane steamLoginSecure ;_;
+router.get("/myhistory/", ensureAuthenticated, async (req, res) => {
+  const { start } = req.query || 0;
+  const { count } = req.query || 50;
+  const url = `http://steamcommunity.com/market/myhistory/?start=${start}&count=${count}`;
+  const response = await fetchAxiosResponsePost(url, {
+    sessionid: req.body.sessionId,
+  });
+  console.log(response);
   res.json(response);
 });
 

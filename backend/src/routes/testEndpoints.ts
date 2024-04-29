@@ -79,3 +79,6 @@ router.get("/UpToDateCheck/cs2", ensureAuthenticated, async (req, res) => {
 });
 
 export default router;
+
+
+// https://steamcommunity.com/market/mylistings/json/?query=&start=0&count=100&norender=1

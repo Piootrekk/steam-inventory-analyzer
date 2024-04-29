@@ -25,17 +25,17 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ showIconsOnly }) => {
     {
       icon: BsGraphUpArrow,
       text: "Investments",
-      onClick: () => console.log("Investments"),
+      onClick: () => navigate("/investments"),
     },
     {
       icon: MdOutlinePriceCheck,
       text: "Item Price",
-      onClick: () => console.log("Item Price"),
+      onClick: () => navigate("/item-price"),
     },
     {
       icon: FaHistory,
       text: "Market data",
-      onClick: () => console.log("History"),
+      onClick: () => navigate("/market-data"),
     },
   ];
 

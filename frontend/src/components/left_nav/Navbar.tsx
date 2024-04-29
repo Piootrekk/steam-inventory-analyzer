@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <div
       className={`flex flex-col min-h-screen text-white order-1 bg-gray-800 py-5 duration-300 ${
-        !showIconsOnly ? "w-64" : "w-16"
+        !showIconsOnly ? "w-min-[200px]" : "w-16"
       } `}
     >
       <div
@@ -28,7 +28,7 @@ const Navbar = () => {
           </>
         )}
         {showIconsOnly && (
-          <FaArrowRightFromBracket className="w-6 h-6 animate-left-rotate rotate-0" />
+          <FaArrowRightFromBracket className="w-6 h-6 animate-left-rotate" />
         )}
       </div>
       <div className="flex-grow">
