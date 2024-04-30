@@ -16,6 +16,9 @@ router.get("/account-details", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env?.STEAM_API_KEY}&steamids=${user._json.steamid}`;
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -32,6 +35,9 @@ router.get("/games", ensureAuthenticated, async (req, res) => {
       include_extended_appinfo: "0",
     });
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -44,6 +50,9 @@ router.get("/level", ensureAuthenticated, async (req, res) => {
       steamid: user?._json.steamid,
     });
   const response = await fetchAxiosResponse(api);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -57,6 +66,9 @@ router.get("/friends", ensureAuthenticated, async (req, res) => {
       relationship: "friend",
     });
   const response = await fetchAxiosResponse(api);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -75,7 +87,7 @@ router.get("/items/:game", ensureAuthenticated, async (req, res) => {
     });
   const response = await fetchAxiosResponse(url);
   if (response.error) {
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(response.error.statusCode).json(response.error);
   }
   res.json(response);
 });
@@ -93,26 +105,27 @@ router.get("/v2/items/:game", ensureAuthenticated, async (req, res) => {
       l: "english",
       count: "5000",
     });
-  const response = (await fetchAxiosResponse(url)) as ItemsResponse;
-  if (!response.success) {
-    return res.status(500).json({ message: "Something went wrong" });
+  const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
   }
-  const itemsDescriptions = response?.descriptions?.map((item: Item) => ({
+  const data = response.data as ItemsResponse;
+  const itemsDescriptions = data?.descriptions?.map((item: Item) => ({
     classid: item.classid,
     market_hash_name: item.market_hash_name,
     icon_url: item.icon_url,
     name_color: item.name_color,
     marketable: item.marketable,
   }));
-  const uniqueClassidMap = mapUniqueAssets(response as ItemsResponse);
+  const uniqueClassidMap = mapUniqueAssets(data as ItemsResponse);
   const combinedItems = processFinalAssets(
     uniqueClassidMap,
     itemsDescriptions || []
   );
   const finalItems: InventoryReturn = {
     items: combinedItems,
-    total_inventory_count: response.total_inventory_count,
-    success: response.success,
+    total_inventory_count: data.total_inventory_count,
+    success: data.success,
   };
 
   res.json(finalItems);
@@ -129,6 +142,9 @@ router.get("/v3/items/:game", ensureAuthenticated, async (req, res) => {
   const user = req.user as AuthenticatedUser;
   const url = `https://steamcommunity.com/profiles/${user?._json.steamid}/inventory/json/${gameId}/2`;
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 

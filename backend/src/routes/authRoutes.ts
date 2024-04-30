@@ -62,8 +62,12 @@ router.get("/protected", ensureAuthenticated, (req, res) => {
   res.json({ message: "You are authenticated" });
 });
 
-router.get("/login-error", (_, res) => {
-  return res.status(401).json({ success: false, message: "Failed to login" });
+router.get("/login-error", (req, res) => {
+  console.log("REFERER: ", req.headers.referer);
+  if (req.headers.referer === process.env.BACKEND_URL || !req.headers.referer) {
+    return res.send(`<a href="/login-v2">Login</a>`);
+  }
+  return res.status(401).json({ message: "Login failed" });
 });
 
 router.get("/is-logged", (req, res) => {

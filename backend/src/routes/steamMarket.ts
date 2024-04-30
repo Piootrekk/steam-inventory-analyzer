@@ -17,6 +17,9 @@ router.get("/market/:game/:hash_name", async (req, res) => {
   }
   const url = `http://steamcommunity.com/market/priceoverview/?appid=${gameId}&currency=6&market_hash_name=${hash_name}`;
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -24,6 +27,9 @@ router.get("/search/:query", async (req, res) => {
   const query = req.params.query;
   const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=1&norender=1`;
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -32,6 +38,9 @@ router.get("/search/:count/:query", async (req, res) => {
   const count = req.params.count;
   const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=${count}&norender=1`;
   const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 
@@ -43,7 +52,9 @@ router.get("/myhistory/", ensureAuthenticated, async (req, res) => {
   const response = await fetchAxiosResponsePost(url, {
     sessionid: req.body.sessionId,
   });
-  console.log(response);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
   res.json(response);
 });
 

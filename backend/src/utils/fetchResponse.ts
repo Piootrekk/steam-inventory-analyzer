@@ -1,23 +1,43 @@
 import { AxiosError, AxiosStatic } from "axios";
 import axios from "axios";
 
-const catchErrorResponse = (axios: AxiosStatic, error: unknown) => {
+export type FetchError = {
+  message: string;
+  statusCode: number;
+  code?: string;
+};
+
+export type FetchResponse = {
+  error?: FetchError;
+  data?: any;
+};
+
+const catchErrorResponse = (axios: AxiosStatic, error: unknown): FetchError => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
     return {
       message: axiosError.message || "No message provided",
-      statusCode: axiosError.response?.status || "Unknown",
+      statusCode: axiosError.response?.status || 500,
       code: axiosError.code || "Unknown",
     };
-  } else return { message: "Error not specified." };
+  } else {
+    return {
+      message: "Unknown unusual error",
+      statusCode: 500,
+    };
+  }
 };
 
-export const fetchAxiosResponse = async (url: string) => {
+export const fetchAxiosResponse = async (
+  url: string
+): Promise<Partial<FetchResponse>> => {
   try {
     const response = await axios.get(url);
-    return response.data;
+    return {
+      data: response.data,
+    };
   } catch (error: unknown) {
-    return catchErrorResponse(axios, error);
+    return { error: catchErrorResponse(axios, error) };
   }
 };
 
