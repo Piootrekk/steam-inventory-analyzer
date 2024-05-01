@@ -5,7 +5,7 @@ import {
 } from "../utils/fetchResponse";
 import { gamesMapper } from "../utils/gamesMapper";
 import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
-
+import { MarketQueryResponse } from "../types/marketTypes";
 const router = Router();
 
 router.get("/market/:game/:hash_name", async (req, res) => {
@@ -20,17 +20,17 @@ router.get("/market/:game/:hash_name", async (req, res) => {
   if (response.error) {
     return res.status(response.error.statusCode).json(response.error);
   }
-  res.json(response);
+  res.json(response.data);
 });
 
 router.get("/search/:query", async (req, res) => {
   const query = req.params.query;
-  const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=1&norender=1`;
+  const url = `http://steamcommunity.com/market/search/render/?query=${query}&currency=6&start=0&count=1&norender=1`;
   const response = await fetchAxiosResponse(url);
   if (response.error) {
     return res.status(response.error.statusCode).json(response.error);
   }
-  res.json(response);
+  res.json(response.data);
 });
 
 router.get("/search/:count/:query", async (req, res) => {
@@ -41,7 +41,25 @@ router.get("/search/:count/:query", async (req, res) => {
   if (response.error) {
     return res.status(response.error.statusCode).json(response.error);
   }
-  res.json(response);
+  res.json(response.data);
+});
+
+router.get("/combined/:query", async (req, res) => {
+  const query = req.params.query;
+  const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=10&norender=1`;
+  const response = await fetchAxiosResponse(url);
+  if (response.error) {
+    return res.status(response.error.statusCode).json(response.error);
+  }
+  const data: MarketQueryResponse = response.data;
+  const url_listed = `http://steamcommunity.com/market/priceoverview/?appid=${data.results[0].asset_description.appid}&currency=6&market_hash_name=${data.results[0].hash_name}`;
+  const response_listed = await fetchAxiosResponse(url_listed);
+  if (response_listed.error) {
+    return res
+      .status(response_listed.error.statusCode)
+      .json(response_listed.error);
+  }
+  res.json({ ...data, ...response_listed.data });
 });
 
 // Wymagane steamLoginSecure ;_;
