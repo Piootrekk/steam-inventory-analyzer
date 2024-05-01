@@ -11,12 +11,14 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen text-white order-1 bg-gray-800 py-5 duration-300 ${
+      className={`flex flex-col min-h-dvh text-white order-1 bg-gray-800 py-5 duration-300 ${
         !showIconsOnly ? "w-min-[200px]" : "w-16"
       } `}
     >
       <div
-        className="p-4 flex flex-row items-center gap-x-2 font-bold cursor-pointer min-h-[64px]"
+        className={`p-4 flex flex-row items-center gap-x-2 font-bold cursor-pointer min-h-[64px] ${
+          showIconsOnly ? "justify-center" : "justify-start"
+        } `}
         onClick={toggleIconsOnly}
       >
         {!showIconsOnly && (

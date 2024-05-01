@@ -1,7 +1,7 @@
 import { FaHome, FaHistory } from "react-icons/fa";
 import { BsFillBackpack2Fill, BsGraphUpArrow } from "react-icons/bs";
 import { MdOutlinePriceCheck } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Ripple from "../common/Button/Ripple";
 
 type NavbarContentProps = {
@@ -9,47 +9,49 @@ type NavbarContentProps = {
 };
 
 const NavbarContent: React.FC<NavbarContentProps> = ({ showIconsOnly }) => {
-  const navigate = useNavigate();
-
   const MenuItems = [
     {
       icon: FaHome,
       text: "Home",
-      onClick: () => navigate("/"),
+      path: "/",
     },
     {
       icon: BsFillBackpack2Fill,
       text: "Inventory",
-      onClick: () => navigate("/inventory"),
+      path: "/inventory",
     },
     {
       icon: BsGraphUpArrow,
       text: "Investments",
-      onClick: () => navigate("/investments"),
+      path: "/investments",
     },
     {
       icon: MdOutlinePriceCheck,
       text: "Item Price",
-      onClick: () => navigate("/item-price"),
+      path: "/item-price",
     },
     {
       icon: FaHistory,
       text: "Market data",
-      onClick: () => navigate("/market-data"),
+      path: "/market-data",
     },
   ];
 
   return (
     <>
       {MenuItems.map((element, index) => (
-        <li
+        <NavLink
           key={index}
-          onClick={element.onClick}
-          className={`p-4 text-xl flex flex-row items-center overflow-hidden gap-x-2 cursor-pointer hover:bg-gray-700 
-          relative min-h-[60px]
-          `}
+          to={element.path}
+          className={({
+            isActive,
+          }) => `p-4 text-xl flex flex-row items-center overflow-hidden gap-x-2 cursor-pointer hover:bg-gray-700 
+        relative min-h-[60px] ${isActive && "bg-gray-700"}  ${
+            showIconsOnly ? "justify-center" : "justify-start"
+          }
+        `}
         >
-          <Ripple duration={500} velocity={500} />
+          <Ripple duration={1200} velocity={500} />
           <div className="size-[22px]">
             {element.icon && <element.icon size={22} />}
           </div>
@@ -59,7 +61,7 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ showIconsOnly }) => {
               {element.text}
             </span>
           )}
-        </li>
+        </NavLink>
       ))}
     </>
   );

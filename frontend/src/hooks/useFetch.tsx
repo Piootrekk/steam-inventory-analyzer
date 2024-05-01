@@ -11,6 +11,7 @@ type FetchData<T> = {
   error: any | null;
   promiseInfo: Response | null;
   activateFetch: () => void;
+  setData: (data: T) => void;
 };
 
 const useFetch = <T,>({ url, type = "GET" }: FetchType): FetchData<T> => {
@@ -55,7 +56,7 @@ const useFetch = <T,>({ url, type = "GET" }: FetchType): FetchData<T> => {
     setTrigger(true);
   };
 
-  return { data, isLoading, error, promiseInfo, activateFetch };
+  return { data, isLoading, error, promiseInfo, activateFetch, setData };
 };
 
 export default useFetch;

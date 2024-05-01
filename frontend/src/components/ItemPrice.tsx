@@ -3,18 +3,21 @@ import Ripple from "./common/Button/Ripple";
 import useFetch from "../hooks/useFetch";
 import { baseBackendURL } from "../env";
 import { useRef } from "react";
+import ContentWrapper from "./wrapper/ContentWrapper";
+import IsLoading from "./common/IsLoading";
 
 const ItemPrice = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { data, activateFetch } = useFetch<MarketResponse>({
-    url: `${baseBackendURL}/market/cs2/${inputRef.current?.value}`,
-  });
+  const { data, activateFetch, isLoading, setData } =
+    useFetch<MarketResponse | null>({
+      url: `${baseBackendURL}/market/cs2/${inputRef.current?.value}`,
+    });
 
   const handleCheckPrice = () => {
-    if (inputRef.current) {
-      console.log(data);
+    if (inputRef.current && inputRef.current.value) {
       activateFetch();
+      setData(null);
     }
   };
 
@@ -23,7 +26,7 @@ const ItemPrice = () => {
       <h1 className="text-4xl text-center ">Type item name, check price!</h1>
       <div className="flex flex-row justify-center pt-6 pb-6 gap-5 order-1 mx-48">
         <input
-          className="border-2 flex border-gray-600 p-2  text-xl rounded-lg w-full bg-gray-700 h-16
+          className="border-2 flex border-gray-600 p-2 text-xl rounded-lg w-full bg-gray-700 h-16
           focus:outline-none focus:border-gray-500"
           type="text"
           ref={inputRef}
@@ -36,15 +39,18 @@ const ItemPrice = () => {
           Check price
         </ButtonRipple>
       </div>
-      <div className="flex flex-col justify-center items-center order-2">
-        {data && (
-          <div className="flex flex-col items-center">
+      <div className="flex flex-col justify-center items-center order-2 mx-10 p-5">
+        {isLoading && <IsLoading className="size-12" />}
+      </div>
+      {data && (
+        <ContentWrapper className="flex flex-col justify-center items-center order-2 mx-10 p-5">
+          <div className="flex flex-col items-center text-xl">
             <p>Price: {data.lowest_price}</p>
             <p>Volume: {data.volume}</p>
             <p>Median price: {data.median_price}</p>
           </div>
-        )}
-      </div>
+        </ContentWrapper>
+      )}
     </div>
   );
 };

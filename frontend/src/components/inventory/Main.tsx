@@ -27,7 +27,7 @@ const Main = () => {
   };
 
   return (
-    <div className="flex flex-col order-2 w-full">
+    <div className="flex flex-col ">
       <div className="order-1">
         <h1 className="text-4xl text-center mt-5">Fetch your inventory</h1>
       </div>
