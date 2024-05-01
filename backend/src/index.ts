@@ -8,6 +8,7 @@ import headerMiddleware, {
 } from "./middlewares/headerMiddleware";
 import sessionMiddleware from "./middlewares/sessionMiddleware";
 import router from "./routes";
+
 config();
 const app: Express = express();
 

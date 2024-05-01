@@ -6,24 +6,30 @@ import {
 import { gamesMapper } from "../utils/gamesMapper";
 import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
 import { MarketQueryResponse } from "../types/marketTypes";
+import rateLimiterMiddleware from "../middlewares/rateLimiterMiddleware";
+
 const router = Router();
 
-router.get("/market/:game/:hash_name", async (req, res) => {
-  const hash_name = req.params.hash_name;
-  const requestedGame = req.params.game.toLowerCase();
-  const gameId = gamesMapper(requestedGame);
-  if (!gameId) {
-    return res.status(404).json({ message: "Something wrong" });
+router.get(
+  "/market/:game/:hash_name",
+  rateLimiterMiddleware(),
+  async (req, res) => {
+    const hash_name = req.params.hash_name;
+    const requestedGame = req.params.game.toLowerCase();
+    const gameId = gamesMapper(requestedGame);
+    if (!gameId) {
+      return res.status(404).json({ message: "Something wrong" });
+    }
+    const url = `http://steamcommunity.com/market/priceoverview/?appid=${gameId}&currency=6&market_hash_name=${hash_name}`;
+    const response = await fetchAxiosResponse(url);
+    if (response.error) {
+      return res.status(response.error.statusCode).json(response.error);
+    }
+    res.json(response.data);
   }
-  const url = `http://steamcommunity.com/market/priceoverview/?appid=${gameId}&currency=6&market_hash_name=${hash_name}`;
-  const response = await fetchAxiosResponse(url);
-  if (response.error) {
-    return res.status(response.error.statusCode).json(response.error);
-  }
-  res.json(response.data);
-});
+);
 
-router.get("/search/:query", async (req, res) => {
+router.get("/search/:query", rateLimiterMiddleware(), async (req, res) => {
   const query = req.params.query;
   const url = `http://steamcommunity.com/market/search/render/?query=${query}&currency=6&start=0&count=1&norender=1`;
   const response = await fetchAxiosResponse(url);
@@ -33,18 +39,22 @@ router.get("/search/:query", async (req, res) => {
   res.json(response.data);
 });
 
-router.get("/search/:count/:query", async (req, res) => {
-  const query = req.params.query;
-  const count = req.params.count;
-  const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=${count}&norender=1`;
-  const response = await fetchAxiosResponse(url);
-  if (response.error) {
-    return res.status(response.error.statusCode).json(response.error);
+router.get(
+  "/search/:count/:query",
+  rateLimiterMiddleware(),
+  async (req, res) => {
+    const query = req.params.query;
+    const count = req.params.count;
+    const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=${count}&norender=1`;
+    const response = await fetchAxiosResponse(url);
+    if (response.error) {
+      return res.status(response.error.statusCode).json(response.error);
+    }
+    res.json(response.data);
   }
-  res.json(response.data);
-});
+);
 
-router.get("/combined/:query", async (req, res) => {
+router.get("/combined/:query", rateLimiterMiddleware(5), async (req, res) => {
   const query = req.params.query;
   const url = `http://steamcommunity.com/market/search/render/?query=${query}&start=0&count=10&norender=1`;
   const response = await fetchAxiosResponse(url);

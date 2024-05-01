@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
 import passport from "passport";
 import { config } from "dotenv";
+import rateLimiterMiddleware from "../middlewares/rateLimiterMiddleware";
 config();
 const router = Router();
 
@@ -54,17 +55,24 @@ router.get(
     res.cookie("sessionId", req.sessionID);
 
     console.log("Redirecting to: ", GLOBAL_REFER);
-    res.redirect(GLOBAL_REFER);
+    res.redirect(GLOBAL_REFER ? GLOBAL_REFER : process.env.BACKEND_URL!);
   }
 );
 
-router.get("/protected", ensureAuthenticated, (req, res) => {
-  res.json({ message: "You are authenticated" });
-});
+router.get(
+  "/protected",
+  ensureAuthenticated,
+  rateLimiterMiddleware(5),
+  (req, res) => {
+    res.json({ message: "You are authenticated" });
+  }
+);
 
 router.get("/login-error", (req, res) => {
-  console.log("REFERER: ", req.headers.referer);
   if (req.headers.referer === process.env.BACKEND_URL || !req.headers.referer) {
+    if (req.isAuthenticated()) {
+      return res.redirect(process.env.BACKEND_URL!);
+    }
     return res.send(`<a href="/login-v2">Login</a>`);
   }
   return res.status(401).json({ message: "Login failed" });
