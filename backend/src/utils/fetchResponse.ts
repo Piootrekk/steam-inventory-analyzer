@@ -1,4 +1,4 @@
-import { AxiosError, AxiosStatic } from "axios";
+import { AxiosError, AxiosResponse, AxiosStatic } from "axios";
 import axios from "axios";
 
 export type FetchError = {
@@ -7,9 +7,9 @@ export type FetchError = {
   code?: string;
 };
 
-export type FetchResponse = {
+export type FetchResponse<T> = {
   error?: FetchError;
-  data?: any;
+  data?: T;
 };
 
 const catchErrorResponse = (axios: AxiosStatic, error: unknown): FetchError => {
@@ -28,11 +28,16 @@ const catchErrorResponse = (axios: AxiosStatic, error: unknown): FetchError => {
   }
 };
 
-export const fetchAxiosResponse = async (
-  url: string
-): Promise<Partial<FetchResponse>> => {
+export const fetchAxiosResponse = async <T>(
+  url: string,
+  method: "get" | "post" | "put" | "delete" = "get"
+): Promise<Partial<FetchResponse<T>>> => {
   try {
-    const response = await axios.get(url);
+    const response: AxiosResponse<T> = await axios({
+      method: method,
+      url: url,
+      headers: {},
+    });
     return {
       data: response.data,
     };

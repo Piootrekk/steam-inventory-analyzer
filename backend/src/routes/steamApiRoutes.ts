@@ -85,7 +85,7 @@ router.get(
         steamid: user?._json.steamid,
         relationship: "friend",
       });
-    const response = await fetchAxiosResponse(api);
+    const response = await fetchAxiosResponse<any>(api);
     if (response.error) {
       return res.status(response.error.statusCode).json(response.error);
     }
@@ -135,27 +135,29 @@ router.get(
         l: "english",
         count: "5000",
       });
-    const response = await fetchAxiosResponse(url);
+    const response = await fetchAxiosResponse<ItemsResponse>(url);
     if (response.error) {
       return res.status(response.error.statusCode).json(response.error);
     }
-    const data = response.data as ItemsResponse;
-    const itemsDescriptions = data?.descriptions?.map((item: Item) => ({
-      classid: item.classid,
-      market_hash_name: item.market_hash_name,
-      icon_url: item.icon_url,
-      name_color: item.name_color,
-      marketable: item.marketable,
-    }));
-    const uniqueClassidMap = mapUniqueAssets(data as ItemsResponse);
+
+    const itemsDescriptions = response.data?.descriptions?.map(
+      (item: Item) => ({
+        classid: item.classid,
+        market_hash_name: item.market_hash_name,
+        icon_url: item.icon_url,
+        name_color: item.name_color,
+        marketable: item.marketable,
+      })
+    );
+    const uniqueClassidMap = mapUniqueAssets(response.data! || []);
     const combinedItems = processFinalAssets(
       uniqueClassidMap,
       itemsDescriptions || []
     );
     const finalItems: InventoryReturn = {
       items: combinedItems,
-      total_inventory_count: data.total_inventory_count,
-      success: data.success,
+      total_inventory_count: response.data?.total_inventory_count || 0,
+      success: response.data?.success || false,
     };
 
     res.json(finalItems);
