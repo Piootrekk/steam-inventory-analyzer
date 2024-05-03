@@ -1,9 +1,9 @@
 import { FetchResponse, fetchAxiosResponse } from "./fetchResponse";
 
 export const proxyLinksGET = [
-  "https://express-proxy.azurewebsites.net/get/",
-  "https://thingproxy.freeboard.io/fetch/",
+  "https://proxy-express.azurewebsites.net/get/",
   "https://express-proxy-jnve.onrender.com/get/",
+  "https://thingproxy.freeboard.io/fetch/",
 ];
 
 export const initProxyRandom = (url: string) => {
@@ -11,22 +11,21 @@ export const initProxyRandom = (url: string) => {
 };
 
 export const initProxy = (url: string) => {
-  return proxyLinksGET[2] + url;
+  return proxyLinksGET[0] + url;
 };
 
 const fetchAxiosResponseProxy = async <T>(
   url: string
 ): Promise<Partial<FetchResponse<T>>> => {
   try {
-    const encodedUrl = encodeURI(url);
-    const response = await fetchAxiosResponse<T>(initProxy(encodedUrl));
+    const encodedUrl = initProxy(encodeURIComponent(url));
+    console.log("Encoded URL: ", encodedUrl);
+    const response = await fetchAxiosResponse<T>(encodedUrl);
     return {
       data: response.data,
     };
   } catch (error: unknown) {
     throw error;
-  } finally {
-    console.log(`Proxying: ${initProxy(url)}`);
   }
 };
 
