@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
 import { AuthType } from "./types/authType";
-import { fetchApiJson } from "./utils/fetchApi";
 import { AuthContext } from "./context/AuthContext";
 import { baseBackendURL } from "./env";
 import { RouterProvider } from "react-router-dom";
+import useFetch from "./hooks/useFetch";
 import router from "./router/router";
+import { useState, useEffect } from "react";
+import FullLoadingView from "./views/FullLoadingView";
+import ErrorView from "./views/ErrorView";
 
 const App = () => {
   const [auth, setAuth] = useState<AuthType>({
@@ -12,23 +14,23 @@ const App = () => {
     user: {},
   });
 
+  const { data, isLoading, error } = useFetch<AuthType>({
+    url: `${baseBackendURL}/is-logged`,
+  });
+
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const userData = await fetchApiJson(`${baseBackendURL}/is-logged`);
-      setAuth(userData);
-      console.log(userData);
-    } catch (error) {
-      throw new Error("Error fetching data");
+    if (data) {
+      setAuth(data);
     }
-  };
+  }, [data]);
 
-  if (auth === undefined) {
-    return <div>Loading...</div>;
-  } else {
+  if (isLoading) {
+    return <FullLoadingView />;
+  }
+  if (error) {
+    return <ErrorView error={error} />;
+  }
+  if (data) {
     return (
       <AuthContext.Provider value={{ auth, setAuth }}>
         <RouterProvider router={router} />

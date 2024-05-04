@@ -1,6 +1,6 @@
 import ButtonRipple from "./common/Button/ButtonRipple";
 import Ripple from "./common/Button/Ripple";
-import useFetch from "../hooks/useFetch";
+import useFetchWithTrigger from "../hooks/useFetchWithTrigger";
 import { baseBackendURL } from "../env";
 import { useRef } from "react";
 import ContentWrapper from "./wrapper/ContentWrapper";
@@ -10,7 +10,7 @@ const ItemPrice = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { data, activateFetch, isLoading, setData } =
-    useFetch<MarketResponse | null>({
+    useFetchWithTrigger<MarketResponse | null>({
       url: `${baseBackendURL}/market/cs2/${inputRef.current?.value}`,
     });
 

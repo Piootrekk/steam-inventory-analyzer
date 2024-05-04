@@ -2,7 +2,7 @@ import { CiLogout, CiSettings } from "react-icons/ci";
 import { VscAccount } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
-import useFetch from "../../hooks/useFetch";
+import useFetchWithTrigger from "../../hooks/useFetchWithTrigger";
 import { baseBackendURL } from "../../env";
 import { useEffect } from "react";
 import { DropMenuContentProps } from "../../types/menuTypes";
@@ -10,7 +10,7 @@ import { DropMenuContentProps } from "../../types/menuTypes";
 const DropContentHeader = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuthContext();
-  const { promiseInfo, activateFetch } = useFetch({
+  const { promiseInfo, activateFetch } = useFetchWithTrigger({
     url: `${baseBackendURL}/logout`,
   });
 

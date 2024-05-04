@@ -1,5 +1,5 @@
 import { IoMdCodeDownload } from "react-icons/io";
-import useFetch from "../../hooks/useFetch";
+import useFetchWithTrigger from "../../hooks/useFetchWithTrigger";
 import IsLoading from "../common/IsLoading";
 import ContentDetails from "./Content";
 import ButtonRipple from "../common/Button/ButtonRipple";
@@ -16,9 +16,10 @@ const Main = () => {
 
   const games = ["tf2", "cs2", "rust"];
 
-  const { data, isLoading, error, activateFetch } = useFetch<InventoryReturn>({
-    url: `${baseBackendURL}/v2/items/${selectedGame}`,
-  });
+  const { data, isLoading, error, activateFetch } =
+    useFetchWithTrigger<InventoryReturn>({
+      url: `${baseBackendURL}/v2/items/${selectedGame}`,
+    });
 
   const handleGameChange = (game: string) => {
     setSelectedGame(game);
