@@ -3,6 +3,7 @@ import { ensureAuthenticated } from "../middlewares/steamAuthMiddleware";
 import passport from "passport";
 import { config } from "dotenv";
 import rateLimiterMiddleware from "../middlewares/rateLimiterMiddleware";
+import cacheMiddleware from "../middlewares/cacheMiddleware";
 config();
 const router = Router();
 
@@ -63,6 +64,7 @@ router.get(
   "/protected",
   ensureAuthenticated,
   rateLimiterMiddleware(5),
+  cacheMiddleware(1),
   (req, res) => {
     res.json({ message: "You are authenticated" });
   }

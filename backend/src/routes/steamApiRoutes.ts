@@ -6,6 +6,7 @@ import { Item, ItemsResponse, InventoryReturn } from "../types/InventoryTypes";
 import { mapUniqueAssets, processFinalAssets } from "../utils/InventoryUtils";
 import { gamesMapper } from "../utils/gamesMapper";
 import rateLimiterMiddleware from "../middlewares/rateLimiterMiddleware";
+import cacheMiddleware from "../middlewares/cacheMiddleware";
 
 const router = Router();
 
@@ -32,6 +33,7 @@ router.get(
   "/games",
   ensureAuthenticated,
   rateLimiterMiddleware(),
+  cacheMiddleware(10),
   async (req, res) => {
     const user = req.user as AuthenticatedUser;
     const url =
@@ -56,6 +58,7 @@ router.get(
   "/level",
   ensureAuthenticated,
   rateLimiterMiddleware(),
+  cacheMiddleware(10),
   async (req, res) => {
     const user = req.user as AuthenticatedUser;
     const api =
@@ -76,6 +79,7 @@ router.get(
   "/friends",
   ensureAuthenticated,
   rateLimiterMiddleware(),
+  cacheMiddleware(10),
   async (req, res) => {
     const user = req.user as AuthenticatedUser;
     const api =
@@ -97,6 +101,7 @@ router.get(
   "/items/:game",
   ensureAuthenticated,
   rateLimiterMiddleware(),
+  cacheMiddleware(30),
   async (req, res) => {
     const requestedGame = req.params.game.toLowerCase();
     const gameId = gamesMapper(requestedGame);
