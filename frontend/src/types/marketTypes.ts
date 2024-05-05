@@ -1,6 +1,11 @@
-type MarketResponse = {
+export type MarketCombinedType = {
   success: boolean;
-  lowest_price: string;
-  volume: string;
-  median_price: string;
+  hash_name: string;
+  sell_listings: number;
+  app_name: string;
+  appid: number;
+  icon_url: string;
+  lowest_price: number;
+  volume: number;
+  median_price: number;
 };

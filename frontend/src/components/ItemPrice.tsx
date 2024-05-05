@@ -2,27 +2,37 @@ import ButtonRipple from "./common/Button/ButtonRipple";
 import Ripple from "./common/Button/Ripple";
 import useFetchWithTrigger from "../hooks/useFetchWithTrigger";
 import { baseBackendURL } from "../env";
-import { useRef } from "react";
-import ContentWrapper from "./wrapper/ContentWrapper";
+import { useRef, useState, useMemo } from "react";
 import IsLoading from "./common/IsLoading";
+import { MarketCombinedType } from "../types/marketTypes";
+import ItemPriceDisplay from "./ItemPriceDisplay";
 
 const ItemPrice = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { data, activateFetch, isLoading, setData } =
-    useFetchWithTrigger<MarketResponse | null>({
-      url: `${baseBackendURL}/market/cs2/${inputRef.current?.value}`,
+  const [marketData, setMarketData] = useState<MarketCombinedType[]>([]);
+
+  const { data, activateFetch, isLoading } =
+    useFetchWithTrigger<MarketCombinedType | null>({
+      url: `${baseBackendURL}/combined/${inputRef.current?.value}`,
     });
+
+  useMemo(() => {
+    if (data) {
+      setMarketData((prevMarketData) => [...prevMarketData, data]);
+    } else {
+      setMarketData([]);
+    }
+  }, [data]);
 
   const handleCheckPrice = () => {
     if (inputRef.current && inputRef.current.value) {
       activateFetch();
-      setData(null);
     }
   };
 
   return (
-    <div className="flex flex-col order-2 w-full mt-5">
+    <div className="flex flex-col order-2 mt-5 ">
       <h1 className="text-4xl text-center ">Type item name, check price!</h1>
       <div className="flex flex-row justify-center pt-6 pb-6 gap-5 order-1 mx-48">
         <input
@@ -41,16 +51,10 @@ const ItemPrice = () => {
       </div>
       <div className="flex flex-col justify-center items-center order-2 mx-10 p-5">
         {isLoading && <IsLoading className="size-12" />}
+        {marketData.length > 0 && !isLoading && (
+          <ItemPriceDisplay data={marketData} />
+        )}
       </div>
-      {data && (
-        <ContentWrapper className="flex flex-col justify-center items-center order-2 mx-10 p-5">
-          <div className="flex flex-col items-center text-xl">
-            <p>Price: {data.lowest_price}</p>
-            <p>Volume: {data.volume}</p>
-            <p>Median price: {data.median_price}</p>
-          </div>
-        </ContentWrapper>
-      )}
     </div>
   );
 };
