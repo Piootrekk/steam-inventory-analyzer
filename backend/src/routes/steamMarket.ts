@@ -24,7 +24,12 @@ const fetchMarketItem = async (gameId: number, hash_name: string) => {
   const url = `https://steamcommunity.com/market/priceoverview/?appid=${gameId}&currency=6&market_hash_name=${hash_name}`;
   const response = await fetchAxiosResponse<MarketResponse>(url);
   if (!response.data) {
-    throw new Error("No data found");
+    response.error = { statusCode: 404, message: "No data found" };
+    return response;
+  }
+  if (!response.data.success) {
+    response.error = { statusCode: 404, message: "Success false" };
+    return response;
   }
 
   const formattedResponse: MarketResponseFixed = {
@@ -37,6 +42,37 @@ const fetchMarketItem = async (gameId: number, hash_name: string) => {
     data: formattedResponse,
   };
 
+  return resp;
+};
+
+const fetchMarketQuery = async (
+  query: string
+): Promise<Partial<FetchResponse<MarketQuerySelected>>> => {
+  const resp: FetchResponse<MarketQuerySelected> = {
+    error: undefined,
+    data: undefined,
+  };
+  const url = `https://steamcommunity.com/market/search/render/?query=${query}&search_descriptions=1&start=0&count=10&norender=1`;
+  const response = await fetchAxiosResponseProxy<MarketQueryResponse>(url);
+  if (!response.data) {
+    resp.error = { statusCode: 404, message: "No data found" };
+    return resp;
+  }
+  const data = response.data;
+  if (!data.success) {
+    resp.error = { statusCode: 404, message: "Success false" };
+    return resp;
+  }
+  const selectedItems: MarketQuerySelected = {
+    success: data.success,
+    hash_name: data.results[0].hash_name,
+    sell_listings: data.results[0].sell_listings,
+    app_name: data.results[0].app_name,
+    appid: data.results[0].asset_description.appid,
+    icon_url: data.results[0].asset_description.icon_url,
+    time: getDateWithTime(),
+  };
+  resp.data = selectedItems;
   return resp;
 };
 
@@ -65,8 +101,7 @@ router.get(
   cacheMiddleware(10),
   async (req, res) => {
     const query = req.params.query;
-    const url = `https://steamcommunity.com/market/search/render/?query=${query}&currency=6&start=0&count=1&norender=1`;
-    const response = await fetchAxiosResponseProxy<MarketQueryResponse>(url);
+    const response = await fetchMarketQuery(query);
     if (response.error) {
       return res.status(response.error.statusCode).json(response.error);
     }
@@ -81,12 +116,15 @@ router.get(
   async (req, res) => {
     const query = req.params.query;
     const count = req.params.count;
-    const url = `https://steamcommunity.com/market/search/render/?query=${query}&start=0&count=${count}&norender=1`;
+    const url = `https://steamcommunity.com/market/search/render/?query=${query}&search_descriptions=1&start=0&count=${count}&norender=1`;
     const response = await fetchAxiosResponseProxy<MarketQueryResponse>(url);
+    if (response.data) {
+      return res.json(response.data);
+    }
     if (response.error) {
       return res.status(response.error.statusCode).json(response.error);
     }
-    res.json(response.data);
+    res.status(404).json({ message: "Smth went wrong" });
   }
 );
 
@@ -96,25 +134,14 @@ router.get(
   cacheMiddleware(10),
   async (req, res) => {
     const query = req.params.query;
-    const url = `https://steamcommunity.com/market/search/render/?query=${query}&start=0&count=10&norender=1`;
-    const response = await fetchAxiosResponseProxy<MarketQueryResponse>(url);
+    const response = await fetchMarketQuery(query);
     if (response.error) {
       return res.status(response.error.statusCode).json(response.error);
     }
-    const data = response.data;
-    if (!data || !data.results || data.results.length === 0) {
-      return res.status(404).json({ message: "No results found" });
+    if (!response.data) {
+      return res.status(404).json({ message: "No data found" });
     }
-
-    const selectedItems: MarketQuerySelected = {
-      success: data.success,
-      hash_name: data.results[0].hash_name,
-      sell_listings: data.results[0].sell_listings,
-      app_name: data.results[0].app_name,
-      appid: data.results[0].asset_description.appid,
-      icon_url: data.results[0].asset_description.icon_url,
-      time: getDateWithTime(),
-    };
+    const selectedItems = response.data;
 
     const response_listed = await fetchMarketItem(
       selectedItems.appid,

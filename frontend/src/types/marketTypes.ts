@@ -8,4 +8,5 @@ export type MarketCombinedType = {
   lowest_price: number;
   volume: number;
   median_price: number;
+  time: string;
 };

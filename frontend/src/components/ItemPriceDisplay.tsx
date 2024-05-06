@@ -9,7 +9,10 @@ const ItemPriceDisplay: React.FC<ItemPriceDisplayProps> = ({ data }) => {
   return (
     <div className="flex flex-wrap gap-3">
       {data.map((item, index) => (
-        <ContentWrapper key={index} className="shadow-md rounded-lg p-4">
+        <ContentWrapper
+          key={index}
+          className="shadow-md rounded-lg p-4  max-w-[240px] min-w-[240px]"
+        >
           <img
             src={`https://community.cloudflare.steamstatic.com/economy/image/${item.icon_url}`}
             alt={item.hash_name}
@@ -23,6 +26,7 @@ const ItemPriceDisplay: React.FC<ItemPriceDisplayProps> = ({ data }) => {
             <p>Median Price: {item.median_price} PLN</p>
             <p>Sell Listings: {item.sell_listings}</p>
             <p>Volume: {item.volume}</p>
+            <p className="text-xs">Time: {item.time}</p>
             <a
               href={`https://steamcommunity.com/market/listings/${item.appid}/${item.hash_name}`}
               target="_blank"
