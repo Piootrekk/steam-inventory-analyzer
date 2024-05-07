@@ -12,4 +12,5 @@ body {
   font-family: "Poppins", sans-serif;
   background-color: rgb(var(--dark-primary));
   color: white;
+  overflow: hidden;
 }

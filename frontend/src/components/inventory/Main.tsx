@@ -56,7 +56,7 @@ const Main = () => {
       </div>
       {data && (
         <>
-          <ContentWrapper className="order-2 flex justify-center flex-col m-10">
+          <ContentWrapper className="order-2 flex justify-center flex-col mx-10 my-4">
             <ContentDetails
               detatails={{
                 totalQuantity: data.total_inventory_count,
@@ -66,13 +66,12 @@ const Main = () => {
               }}
             ></ContentDetails>
           </ContentWrapper>
-          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center mx-10 mb-4 px-5 py-10 order-3">
+          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center mx-10  px-5 py-10 order-3 overflow-y-auto max-h-[450px] mb-8">
             {data.items.length > 0 &&
               data.items.map((item, index) => (
                 <Card
                   key={index}
-                  className={` text-white  hover:scale-110 transition-all hover:opacity-80 duration-300 w-24 h-32 w-max-24 h-max-30 flex flex-row 
-                `}
+                  className={`text-white hover:scale-110 transition-all hover:opacity-80 duration-300 w-24 h-30 flex flex-row`}
                   onMouseEnter={() => setHoveredItem(item.market_hash_name)}
                 >
                   <img
