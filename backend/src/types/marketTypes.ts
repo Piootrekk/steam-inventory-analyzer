@@ -35,5 +35,4 @@ export type MarketQuerySelected = {
   app_name: string;
   appid: number;
   icon_url: string;
-  time: string;
 };

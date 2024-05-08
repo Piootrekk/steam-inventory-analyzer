@@ -19,7 +19,7 @@ const ItemPrice = () => {
 
   useMemo(() => {
     if (data) {
-      setMarketData((prevMarketData) => [...prevMarketData, data]);
+      setMarketData((prevMarketData) => [data, ...prevMarketData]);
     } else {
       setMarketData([]);
     }
@@ -29,6 +29,12 @@ const ItemPrice = () => {
     if (inputRef.current && inputRef.current.value) {
       activateFetch();
     }
+  };
+
+  const removeItem = (id: string) => {
+    setMarketData((prevMarketData) =>
+      prevMarketData.filter((item) => item.id !== id)
+    );
   };
 
   return (
@@ -52,7 +58,7 @@ const ItemPrice = () => {
       <div className="flex flex-col justify-center items-center order-2 mx-10 p-5">
         {isLoading && <IsLoading className="size-12" />}
         {marketData.length > 0 && !isLoading && (
-          <ItemPriceDisplay data={marketData} />
+          <ItemPriceDisplay data={marketData} removeItem={removeItem} />
         )}
       </div>
     </div>

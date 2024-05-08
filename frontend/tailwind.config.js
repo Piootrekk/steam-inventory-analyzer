@@ -3,6 +3,10 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      transitionProperty: {
+        height: "height",
+        width: "width",
+      },
       colors: {
         primary: "rgba(var(--dark-primary))",
         secondary: "rgba(var(--dark-secondary))",
@@ -17,6 +21,7 @@ export default {
         sans: ["Poppins", "sans-serif"],
       },
     },
+
     keyframes: {
       leftRotate: {
         "0%": {

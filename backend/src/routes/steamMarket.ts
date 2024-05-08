@@ -17,6 +17,7 @@ import fetchAxiosResponseProxy from "../utils/proxy";
 import { removeThousandthSparator, priceParser } from "../utils/parser";
 import { getDateWithTime } from "../utils/date";
 import cacheMiddleware from "../middlewares/cacheMiddleware";
+import { v4 as uuidv4 } from "uuid";
 
 const router = Router();
 
@@ -59,7 +60,7 @@ const fetchMarketQuery = async (
     return resp;
   }
   const data = response.data;
-  if (!data.success) {
+  if (!data.success || !data.results.length || !data.results[0].hash_name) {
     resp.error = { statusCode: 404, message: "Success false" };
     return resp;
   }
@@ -70,7 +71,6 @@ const fetchMarketQuery = async (
     app_name: data.results[0].app_name,
     appid: data.results[0].asset_description.appid,
     icon_url: data.results[0].asset_description.icon_url,
-    time: getDateWithTime(),
   };
   resp.data = selectedItems;
   return resp;
@@ -152,7 +152,9 @@ router.get(
         .status(response_listed.error.statusCode)
         .json(response_listed.error);
     }
-    res.json({ ...selectedItems, ...response_listed.data });
+    const time = getDateWithTime();
+    const id = uuidv4();
+    res.json({ ...selectedItems, ...response_listed.data, time, id });
   }
 );
 

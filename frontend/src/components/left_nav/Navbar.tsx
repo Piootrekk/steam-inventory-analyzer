@@ -11,9 +11,9 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-dvh text-white order-1 bg-gray-800 py-5 duration-300 ${
-        !showIconsOnly ? "w-min-[200px]" : "w-16"
-      } `}
+      className={`flex flex-col min-h-dvh text-white order-1 bg-gray-800 py-5 duration-500
+      ${showIconsOnly ? "w-16" : "w-[200px]"}
+      `}
     >
       <div
         className={`p-4 flex flex-row items-center gap-x-2 font-bold cursor-pointer min-h-[64px] ${
@@ -26,7 +26,11 @@ const Navbar = () => {
             <div className="w-6 h-6">
               <FaArrowRightFromBracket className=" w-6 h-6 animate-right-rotate" />
             </div>
-            <h1 className="text-2xl">Dashboard</h1>
+            <h1
+              className={`text-2xl flex-wrap overflow-hidden whitespace-nowrap `}
+            >
+              Dashboard
+            </h1>
           </>
         )}
         {showIconsOnly && (

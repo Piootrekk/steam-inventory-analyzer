@@ -1,18 +1,29 @@
 import ContentWrapper from "./wrapper/ContentWrapper";
 import { MarketCombinedType } from "../types/marketTypes";
+import { IoMdClose } from "react-icons/io";
 
 type ItemPriceDisplayProps = {
   data: MarketCombinedType[];
+  removeItem: (id: string) => void;
 };
 
-const ItemPriceDisplay: React.FC<ItemPriceDisplayProps> = ({ data }) => {
+const ItemPriceDisplay: React.FC<ItemPriceDisplayProps> = ({
+  data,
+  removeItem,
+}) => {
   return (
     <div className="flex flex-wrap gap-3">
       {data.map((item, index) => (
         <ContentWrapper
           key={index}
-          className="shadow-md rounded-lg p-4  max-w-[240px] min-w-[240px]"
+          className="shadow-md rounded-lg p-4  max-w-[240px] min-w-[240px] relative"
         >
+          <button
+            onClick={() => removeItem(item.id)}
+            className="absolute -top-2 -right-2 m-3 p-1 text-white rounded-md hover:opacity-60 focus:outline-none"
+          >
+            <IoMdClose />
+          </button>
           <img
             src={`https://community.cloudflare.steamstatic.com/economy/image/${item.icon_url}`}
             alt={item.hash_name}

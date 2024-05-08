@@ -9,4 +9,5 @@ export type MarketCombinedType = {
   volume: number;
   median_price: number;
   time: string;
+  id: string;
 };

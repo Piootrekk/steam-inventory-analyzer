@@ -12,6 +12,10 @@ const cacheMiddleware = (min: number) => {
     } else {
       const originalSend = res.send;
       res.send = (body): Response<any, Record<string, any>> => {
+        if (res.statusCode >= 400) {
+          console.log(`Error response, not saving to cache`);
+          return originalSend.call(res, body);
+        }
         console.log(`Cache miss for ${key}, saved`);
         cache.put(key, body, min * 60 * 1000);
         return originalSend.call(res, body);
