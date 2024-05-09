@@ -19,7 +19,6 @@ const fetchAxiosResponseProxy = async <T>(
 ): Promise<Partial<FetchResponse<T>>> => {
   try {
     const encodedUrl = initProxy(encodeURIComponent(url));
-    console.log("Encoded URL: ", encodedUrl);
     const response = await fetchAxiosResponse<T>(encodedUrl);
     return {
       data: response.data,

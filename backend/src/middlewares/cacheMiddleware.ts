@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as cache from "memory-cache";
+import { v4 as uuidv4 } from "uuid";
+import { getDateWithTime } from "../utils/date";
 
 const cacheMiddleware = (min: number) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -7,16 +9,20 @@ const cacheMiddleware = (min: number) => {
     const cachedBody = cache.get(key);
 
     if (cachedBody) {
-      console.log(`Cache hit for ${key}`);
-      return res.send(cachedBody);
+      const parsedBody = JSON.parse(cachedBody);
+      if (parsedBody.id) {
+        parsedBody.id = uuidv4();
+        parsedBody.time = getDateWithTime();
+      }
+
+      return res.send(parsedBody);
     } else {
       const originalSend = res.send;
       res.send = (body): Response<any, Record<string, any>> => {
         if (res.statusCode >= 400) {
-          console.log(`Error response, not saving to cache`);
           return originalSend.call(res, body);
         }
-        console.log(`Cache miss for ${key}, saved`);
+
         cache.put(key, body, min * 60 * 1000);
         return originalSend.call(res, body);
       };

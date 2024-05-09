@@ -6,9 +6,9 @@ import steamMarket from "./steamMarket";
 
 const router = Router();
 
-router.use(authRoutes);
-router.use(steamApiRoutes);
-router.use(steamMarket);
-router.use(testEndpoints);
+router.use("/", authRoutes);
+router.use("/", steamApiRoutes);
+router.use("/", steamMarket);
+router.use("/", testEndpoints);
 
 export default router;
