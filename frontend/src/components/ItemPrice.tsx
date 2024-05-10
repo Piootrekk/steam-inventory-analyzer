@@ -25,7 +25,13 @@ const ItemPrice = () => {
     }
   }, [data]);
 
-  const handleCheckPrice = () => {
+  const handleCheckPrice = (
+    e:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (inputRef.current && inputRef.current.value) {
       activateFetch();
     }
@@ -38,9 +44,13 @@ const ItemPrice = () => {
   };
 
   return (
-    <div className="flex flex-col order-2 mt-5 ">
+    <div className="flex flex-col order-2 mt-5">
       <h1 className="text-4xl text-center ">Type item name, check price!</h1>
-      <div className="flex flex-row justify-center pt-6 pb-6 gap-5 order-1 mx-48">
+
+      <form
+        className="flex flex-row justify-center pt-6 pb-6 gap-5 order-1 mx-48"
+        onSubmit={handleCheckPrice}
+      >
         <input
           className="border-2 flex border-gray-600 p-2 text-xl rounded-lg w-full bg-gray-700 h-16
           focus:outline-none focus:border-gray-500"
@@ -49,15 +59,20 @@ const ItemPrice = () => {
         />
         <ButtonRipple
           className="w-48 bg-blue-500 rounded-lg text-2xl"
+          disabled={isLoading}
+          type="submit"
           onClick={handleCheckPrice}
         >
           <Ripple duration={3000} velocity={1500} />
-          Check price
+
+          <span className="flex flex-row gap-3 items-center justify-center">
+            {!isLoading ? "Check Price" : <IsLoading className="size-6" />}
+          </span>
         </ButtonRipple>
-      </div>
+      </form>
+
       <div className="flex flex-col justify-center items-center order-2 mx-10 p-5">
-        {isLoading && <IsLoading className="size-12" />}
-        {marketData.length > 0 && !isLoading && (
+        {marketData.length > 0 && (
           <ItemPriceDisplay data={marketData} removeItem={removeItem} />
         )}
       </div>

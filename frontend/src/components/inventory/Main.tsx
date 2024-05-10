@@ -66,7 +66,7 @@ const Main = () => {
               }}
             ></ContentDetails>
           </ContentWrapper>
-          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center mx-10  px-5 py-10 order-3 overflow-y-auto max-h-[450px] mb-8">
+          <ContentWrapper className="flex flex-wrap flex-row gap-5 items-center justify-center mx-10  px-5 py-10 order-3  mb-8">
             {data.items.length > 0 &&
               data.items.map((item, index) => (
                 <Card

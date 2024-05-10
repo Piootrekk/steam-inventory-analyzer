@@ -97,8 +97,8 @@ router.get(
 
 router.get(
   "/search/:query",
-  rateLimiterMiddleware(),
   cacheMiddleware(10),
+  rateLimiterMiddleware(),
   async (req, res) => {
     const query = req.params.query;
     const response = await fetchMarketQuery(query);
@@ -111,8 +111,8 @@ router.get(
 
 router.get(
   "/search/:count/:query",
-  rateLimiterMiddleware(),
   cacheMiddleware(10),
+  rateLimiterMiddleware(),
   async (req, res) => {
     const query = req.params.query;
     const count = req.params.count;
@@ -130,8 +130,8 @@ router.get(
 
 router.get(
   "/combined/:query",
-  rateLimiterMiddleware(5),
   cacheMiddleware(10),
+  rateLimiterMiddleware(5),
   async (req, res) => {
     const query = req.params.query;
     const response = await fetchMarketQuery(query);

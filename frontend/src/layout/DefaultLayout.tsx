@@ -12,7 +12,9 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
         <div className="order-1">
           <Navbar />
         </div>
-        <div className="order-2 w-full">{children}</div>
+        <div className="order-2 w-full overflow-y-auto max-h-screen pb-32">
+          {children}
+        </div>
       </div>
     </>
   );
