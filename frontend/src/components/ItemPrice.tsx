@@ -2,15 +2,17 @@ import ButtonRipple from "./common/Button/ButtonRipple";
 import Ripple from "./common/Button/Ripple";
 import useFetchWithTrigger from "../hooks/useFetchWithTrigger";
 import { baseBackendURL } from "../env";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import IsLoading from "./common/IsLoading";
 import { MarketCombinedType } from "../types/marketTypes";
 import ItemPriceDisplay from "./ItemPriceDisplay";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const ItemPrice = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [marketData, setMarketData] = useState<MarketCombinedType[]>([]);
+  const [marketData, setMarketData] =
+    useLocalStorage<MarketCombinedType[]>("marketData");
 
   const { data, activateFetch, isLoading } =
     useFetchWithTrigger<MarketCombinedType | null>({
@@ -20,10 +22,8 @@ const ItemPrice = () => {
   useMemo(() => {
     if (data) {
       setMarketData((prevMarketData) => [data, ...prevMarketData]);
-    } else {
-      setMarketData([]);
     }
-  }, [data]);
+  }, [data, setMarketData]);
 
   const handleCheckPrice = (
     e:

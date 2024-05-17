@@ -37,7 +37,6 @@ const useFetchWithTrigger = <T,>({
   useEffect(() => {
     if (trigger) {
       fetchData();
-      console.log("Fetching data");
       setTrigger(false);
     }
   }, [trigger]);

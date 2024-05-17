@@ -7,32 +7,30 @@ const useFetch = <T,>({ url, type = "GET" }: FetchType): FetchData<T> => {
   const [error, setError] = useState<unknown | null>(null);
   const [promiseInfo, setPromiseInfo] = useState<Response | null>(null);
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(url, {
-        method: type,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setPromiseInfo(response);
-      if (!response.ok) {
-        throw new Error(`${response.statusText} (${response.status})`);
-      }
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(url, {
+          method: type,
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setPromiseInfo(response);
+        if (!response.ok) {
+          throw new Error(`${response.statusText} (${response.status})`);
+        }
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchData();
-    console.log("Fetching data");
   }, [url]);
 
   return { data, isLoading, error, promiseInfo, setData };
