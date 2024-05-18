@@ -1,4 +1,4 @@
-import ItemPrice from "../components/ItemPrice";
+import ItemPrice from "../components/item_price/ItemPrice";
 
 const ItemPriceView = () => {
   return (

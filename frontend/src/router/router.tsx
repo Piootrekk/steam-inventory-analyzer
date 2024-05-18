@@ -4,6 +4,7 @@ import Home from "../views/Home";
 import Inventory from "../views/Inventory";
 import ItemPriceView from "../views/ItemPriceView";
 import DefaultLayout from "../layout/DefaultLayout";
+import InvestmentsView from "../views/InvestmentsView";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/item-price",
         element: <ItemPriceView />,
+      },
+      {
+        path: "/investments",
+        element: <InvestmentsView />,
       },
       {
         path: "*",

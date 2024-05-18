@@ -47,7 +47,7 @@ const Main = () => {
               {isLoading && selectedGame === game ? (
                 <IsLoading className="size-6" />
               ) : (
-                <IoMdCodeDownload className="size-6" />
+                <IoMdCodeDownload className="size-7" />
               )}
               {game.toUpperCase()}
             </span>

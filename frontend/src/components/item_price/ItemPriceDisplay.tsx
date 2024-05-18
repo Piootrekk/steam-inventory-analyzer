@@ -1,5 +1,5 @@
-import ContentWrapper from "./wrapper/ContentWrapper";
-import { MarketCombinedType } from "../types/marketTypes";
+import ContentWrapper from "../wrapper/ContentWrapper";
+import { MarketCombinedType } from "../../types/marketTypes";
 import { CgClose } from "react-icons/cg";
 
 type ItemPriceDisplayProps = {

@@ -7,7 +7,11 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({
   children,
   className,
 }) => {
-  return <div className={` bg-gray-800 rounded-md   ${className}`}>{children}</div>;
+  return (
+    <div className={` bg-gray-800 rounded-md shadow-md   ${className}`}>
+      {children}
+    </div>
+  );
 };
 
 export default ContentWrapper;
