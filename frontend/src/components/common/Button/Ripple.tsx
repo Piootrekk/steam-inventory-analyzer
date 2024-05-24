@@ -51,16 +51,18 @@ const Ripple: React.FC<RippleProps> = ({ duration, velocity }) => {
   };
 
   const rippleEffect = () => {
-    if (velocity === undefined) {
-      return "animate-ripple";
-    } else if (velocity === 500) {
-      return "animate-ripple-500";
-    } else if (velocity === 1000) {
-      return "animate-ripple-1000";
-    } else if (velocity === 1500) {
-      return "animate-ripple-1500";
-    } else if (velocity === 3000) {
-      return "animate-ripple-3000";
+    switch (velocity) {
+      case 500:
+        return "animate-ripple-500";
+      case 1000:
+        return "animate-ripple-1000";
+      case 1500:
+        return "animate-ripple-1500";
+      case 3000:
+        return "animate-ripple-3000";
+      case undefined:
+      default:
+        return "animate-ripple";
     }
   };
 
