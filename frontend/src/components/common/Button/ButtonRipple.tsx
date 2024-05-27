@@ -18,7 +18,7 @@ const ButtonRipple: React.FC<ButtonProps> = ({
       {...props}
       type="button"
       className={`rounded-md overflow-hidden shadow relative bg-blue-700 text-xl
-          text-white hover:bg-opacity-80 border border-blue-950 focus:outline-none ${className}`}
+          text-white hover:bg-opacity-80 border border-blue-950 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       onClick={handleClick}
     ></button>
   );
