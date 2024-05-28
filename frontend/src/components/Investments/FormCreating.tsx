@@ -20,7 +20,7 @@ const FormCreating: React.FC<FormCreatingProps> = ({
 }) => {
   return (
     <>
-      <div className=" flex flex-col items-center gap-y-8">
+      <div className=" flex flex-col items-center gap-y-5">
         <ComponentPagination
           page={page}
           components={[SpreedsheetCreate, InvestingDetails, FinishInvesting]}
