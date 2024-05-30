@@ -29,11 +29,10 @@ const ComponentPaginationWithPropsInBulk: React.FC<
 
 export default ComponentPaginationWithPropsInBulk;
 
-
 export const ComponentPagination: React.FC<ComponentPaginationProps> = ({
   page,
   components,
 }) => {
-  const { component: Component, props = {}, ref } = components[page];
-  return <Component ref={ref} {...props} />;
+  const { component: Component, props = {}, ref } = components[page] || {};
+  return Component ? <Component ref={ref} {...props} /> : null;
 };

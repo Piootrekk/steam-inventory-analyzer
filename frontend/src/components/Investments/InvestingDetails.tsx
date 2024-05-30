@@ -53,6 +53,9 @@ const InvestingDetails = forwardRef((_, ref) => {
       return true;
     },
     getValue: () => investmentDetails,
+    setValue: (value: InvestmentDetails[]) => {
+      setInvestmentDetails(value);
+    },
   }));
 
   return (

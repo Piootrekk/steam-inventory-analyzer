@@ -15,7 +15,7 @@ const NotCreated: React.FC = () => {
         </h1>
         <div className="flex justify-center mt-10">
           <ButtonRipple
-            className="w-1/4 px-4 py-3 items-center flex justify-center"
+            className="w-1/4 px-4 py-3 items-center flex justify-center min-w-48"
             onClick={() => {
               setCreate((prev) => !prev);
             }}

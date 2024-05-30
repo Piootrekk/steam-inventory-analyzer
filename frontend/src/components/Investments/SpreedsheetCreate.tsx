@@ -20,11 +20,14 @@ const SpreedsheetCreate = forwardRef((_, ref) => {
   useImperativeHandle(ref, () => ({
     validate: useValidate,
     getValue: () => inputRef.current!.value,
+    setValue: (value: string) => {
+      inputRef.current!.value = value;
+    },
   }));
 
   return (
     <>
-      <h2 className="flex flex-row gap-2 text-2xl">
+      <h2 className="flex flex-row gap-2 text-2xl pb-3">
         <LuFileSpreadsheet size={24} className="self-center" />
         Type Spreadsheet name:
       </h2>

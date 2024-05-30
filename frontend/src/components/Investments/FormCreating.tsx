@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ButtonRipple from "../common/Button/ButtonRipple";
 import Ripple from "../common/Button/Ripple";
 import SpreedsheetCreate from "./SpreedsheetCreate";
@@ -10,6 +10,8 @@ import {
   InvestmentDetails,
   InvestmentFormTypes,
 } from "../../types/investmentFormTypes";
+import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { TfiSave } from "react-icons/tfi";
 
 type FormCreatingProps = {
   page: number;
@@ -32,6 +34,15 @@ const FormCreating: React.FC<FormCreatingProps> = ({
     investments: [],
   });
 
+  useEffect(() => {
+    if (page === 0 && spreedsheetCreateRef.current) {
+      spreedsheetCreateRef.current.setValue(data.spreadsheetName);
+    }
+    if (page === 1 && investingDetailsRef.current) {
+      investingDetailsRef.current.setValue(data.investments);
+    }
+  }, [page, data]);
+
   const handleNextClick = () => {
     if (page === 0 && spreedsheetCreateRef.current) {
       const isValid = spreedsheetCreateRef.current.validate();
@@ -53,16 +64,19 @@ const FormCreating: React.FC<FormCreatingProps> = ({
     }
     handleClickNext();
   };
+
+  const handlePrevClick = () => {
+    handleClickPrev();
+  };
+
   const componentConfigs = [
     {
       component: SpreedsheetCreate,
       ref: spreedsheetCreateRef,
-      props: {},
     },
     {
       component: InvestingDetails,
       ref: investingDetailsRef,
-      props: {},
     },
     {
       component: FinishInvesting,
@@ -71,30 +85,42 @@ const FormCreating: React.FC<FormCreatingProps> = ({
   ];
 
   return (
-    <>
-      <div className="flex flex-col items-center gap-y-5">
-        <ComponentPagination page={page} components={componentConfigs} />
-        <div className="w-full flex flex-row gap-x-5 gap-y-2 justify-center flex-wrap">
-          <ButtonRipple
-            className="w-1/6 min-w-32"
-            onClick={handleClickPrev}
-            disabled={page === 0}
-          >
-            Prev
-            <Ripple duration={2000} />
-          </ButtonRipple>
+    <div className="flex flex-col items-center gap-y-5">
+      <ComponentPagination page={page} components={componentConfigs} />
+      <div className="w-full flex flex-row gap-x-5 gap-y-2 justify-center flex-wrap">
+        <ButtonRipple
+          className="w-1/6 min-w-32 items-center flex justify-center"
+          onClick={handlePrevClick}
+          disabled={page === 0}
+        >
+          <MdNavigateBefore size={24} />
+          Prev
+          <Ripple duration={2000} />
+        </ButtonRipple>
 
+        {page !== maxPage && (
           <ButtonRipple
-            className="w-1/6 min-w-32"
+            className="w-1/6 min-w-32 items-center flex justify-center"
             onClick={handleNextClick}
             disabled={page === maxPage}
           >
             Next
+            <MdNavigateNext size={24} />
             <Ripple duration={2000} />
           </ButtonRipple>
-        </div>
+        )}
+        {page === maxPage && (
+          <ButtonRipple
+            className="w-1/6 min-w-32 bg-green-600 items-center flex justify-center gap-x-1"
+            onClick={() => console.log(data)}
+          >
+            <TfiSave />
+            Save
+            <Ripple duration={2000} />
+          </ButtonRipple>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
