@@ -1,11 +1,27 @@
+import { forwardRef, useRef, useState, useImperativeHandle } from "react";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import InputCustom from "../common/Input/InputCustom";
-import { useRef } from "react";
 
-type SpreedsheetCreateProps = {};
+const SpreedsheetCreate = forwardRef((_, ref) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string>("");
 
-const SpreedsheetCreate: React.FC<SpreedsheetCreateProps> = () => {
-  const ref = useRef<HTMLInputElement>(null);
+  const useValidate = () => {
+    const regex = /^[A-Z][a-z]*$/;
+    if (!regex.test(inputRef.current!.value)) {
+      setError("Name must start with capital letter and contain only letters.");
+      return false;
+    } else {
+      setError("");
+      return true;
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    validate: useValidate,
+    getValue: () => inputRef.current!.value,
+  }));
+
   return (
     <>
       <h2 className="flex flex-row gap-2 text-2xl">
@@ -16,10 +32,11 @@ const SpreedsheetCreate: React.FC<SpreedsheetCreateProps> = () => {
       <InputCustom
         label="Spreadsheet Name"
         widthClassName="w-1/5 min-w-48"
-        ref={ref}
+        ref={inputRef}
+        error={error}
       />
     </>
   );
-};
+});
 
 export default SpreedsheetCreate;

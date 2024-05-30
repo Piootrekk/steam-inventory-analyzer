@@ -15,7 +15,7 @@ const CustomTable = <T,>({ data, columns, footer }: CustomTableProps<T>) => {
   return (
     <>
       {data.length > 0 ? (
-        <table className="border border-gray-600 rounded-lg overflow-hidden bg-gray-800 w-2/3">
+        <table className="border border-gray-900 rounded-lg overflow-hidden bg-gray-800 w-2/3">
           <thead className="bg-gray-700 text-gray-100">
             <tr className="text-lg">
               {columns.map((column, index) => (
@@ -29,7 +29,7 @@ const CustomTable = <T,>({ data, columns, footer }: CustomTableProps<T>) => {
             {data.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className="text-center even:bg-gray-700 odd:bg-gray-800 text-gray-100"
+                className="text-center bg-gray-700  text-gray-100 hover:bg-gray-600"
               >
                 {columns.map((column, colIndex) => (
                   <td
@@ -43,9 +43,11 @@ const CustomTable = <T,>({ data, columns, footer }: CustomTableProps<T>) => {
             ))}
           </tbody>
           {footer && (
-            <tfoot className="bg-gray-700 text-gray-100 text-lg">
-              <tr>
-                <td colSpan={columns.length}>{footer}</td>
+            <tfoot className="bg-gray-700 text-gray-100">
+              <tr className="text-lg">
+                <td className="px-4 py-2" colSpan={columns.length}>
+                  {footer}
+                </td>
               </tr>
             </tfoot>
           )}

@@ -3,10 +3,11 @@ import { forwardRef } from "react";
 type InputCustomProps = {
   label: string;
   widthClassName?: string;
+  error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const InputCustom = forwardRef<HTMLInputElement, InputCustomProps>(
-  ({ label, widthClassName, ...props }, ref) => {
+  ({ label, widthClassName, error, ...props }, ref) => {
     return (
       <div className={`relative ${widthClassName}`}>
         <input
@@ -24,6 +25,7 @@ const InputCustom = forwardRef<HTMLInputElement, InputCustomProps>(
         >
           {label}
         </label>
+        {error && <p className="text-red-500 text-sm text-center!">{error}</p>}
       </div>
     );
   }

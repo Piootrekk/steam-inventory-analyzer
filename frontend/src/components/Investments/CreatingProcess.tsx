@@ -8,6 +8,7 @@ type ContentWrapperProps = {};
 
 const CreatingProcess: React.FC<ContentWrapperProps> = () => {
   const [currentStep, setCurrentStep] = useState(0);
+
   const steps = ["Spreedsheet", "Investments form", "Send to DB"];
   const handleClickNext = () => {
     setCurrentStep((prev) => prev + 1);

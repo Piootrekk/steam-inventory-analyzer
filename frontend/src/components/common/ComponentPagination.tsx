@@ -1,28 +1,39 @@
 import React from "react";
 
-type ComponentWithProps = {
-  component: React.FC<any>;
+type ComponentPaginationPropsInBulk = {
+  page: number;
+  components: React.ElementType[];
+  componentRefs?: React.Ref<any>[];
+  commonProps?: Record<string, any>;
+};
+
+type ComponentConfig = {
+  component: React.ElementType;
   props?: Record<string, any>;
+  ref?: React.Ref<any>;
 };
 
 type ComponentPaginationProps = {
   page: number;
-  components: ComponentWithProps[];
+  components: ComponentConfig[];
 };
 
-export const ComponentPaginationWithSubProps: React.FC<
-  ComponentPaginationProps
-> = ({ page, components }) => {
-  const { component: Component, props } = components[page];
-  return <Component {...props} />;
-};
-
-const ComponentPagination: React.FC<{
-  page: number;
-  components: React.FC[];
-}> = ({ page, components }) => {
+const ComponentPaginationWithPropsInBulk: React.FC<
+  ComponentPaginationPropsInBulk
+> = ({ page, components, componentRefs, commonProps = {} }) => {
   const Component = components[page];
-  return <Component />;
+  if (componentRefs === undefined) return <Component {...commonProps} />;
+  const componentRef = componentRefs[page];
+  return <Component ref={componentRef} {...commonProps} />;
 };
 
-export default ComponentPagination;
+export default ComponentPaginationWithPropsInBulk;
+
+
+export const ComponentPagination: React.FC<ComponentPaginationProps> = ({
+  page,
+  components,
+}) => {
+  const { component: Component, props = {}, ref } = components[page];
+  return <Component ref={ref} {...props} />;
+};

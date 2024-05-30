@@ -1,59 +1,26 @@
-import React from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { TbListDetails } from "react-icons/tb";
 import InputCustom from "../common/Input/InputCustom";
 import { IoMdAdd } from "react-icons/io";
 import ButtonRipple from "../common/Button/ButtonRipple";
 import Ripple from "../common/Button/Ripple";
-import { useRef, useState } from "react";
 import { InvestmentDetails } from "../../types/investmentFormTypes";
 import CustomTable from "../common/CustomTable";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { TableBody, TableFooter } from "./TableConfig";
 
-type InvestingDetailsProps = {};
-
-const InvestingDetails: React.FC<InvestingDetailsProps> = () => {
+const InvestingDetails = forwardRef((_, ref) => {
   const [investmentDetails, setInvestmentDetails] = useState<
     InvestmentDetails[]
   >([]);
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
-
+  const [error, setError] = useState<string>("");
   const resetIds = (details: InvestmentDetails[]): InvestmentDetails[] => {
     return details.map((item, index) => ({
       ...item,
       id: index + 1,
     }));
   };
-
-  const tableColumns = [
-    {
-      header: "No.",
-      accessor: (row: InvestmentDetails) => row.id,
-    },
-    {
-      header: "Item Name",
-      accessor: (row: InvestmentDetails) => row.name,
-    },
-    {
-      header: "Buy Order Price",
-      accessor: (row: InvestmentDetails) => row.boughtPrice,
-    },
-    {
-      header: "Remove",
-      accessor: (row: InvestmentDetails) => (
-        <button
-          className="text-red-500"
-          onClick={() =>
-            setInvestmentDetails((prev) =>
-              resetIds(prev.filter((item) => item.id !== row.id))
-            )
-          }
-        >
-          <FaRegTrashAlt size={24} className="self-center" />
-        </button>
-      ),
-    },
-  ];
 
   const handleAddInvestment = () => {
     if (
@@ -77,11 +44,16 @@ const InvestingDetails: React.FC<InvestingDetailsProps> = () => {
     }
   };
 
-  const totalInvestment = investmentDetails.reduce(
-    (total, item) => total + item.boughtPrice,
-    0
-  );
-  const totalItems = investmentDetails.length;
+  useImperativeHandle(ref, () => ({
+    validate: () => {
+      if (investmentDetails.length === 0) {
+        setError("You must add at least one investment.");
+        return false;
+      }
+      return true;
+    },
+    getValue: () => investmentDetails,
+  }));
 
   return (
     <>
@@ -91,15 +63,8 @@ const InvestingDetails: React.FC<InvestingDetailsProps> = () => {
       </h2>
       <CustomTable
         data={investmentDetails}
-        columns={tableColumns}
-        footer={
-          <div className="flex px-5">
-            <span className="flex-auto">Total Items: {totalItems}</span>
-            <span className="flex-auto">
-              Total Investment: {totalInvestment}
-            </span>
-          </div>
-        }
+        columns={TableBody(setInvestmentDetails)}
+        footer={TableFooter(investmentDetails)}
       />
       <div className="flex flex-row gap-2 flex-wrap justify-center items-center gap-y-8 mt-4">
         <InputCustom
@@ -124,8 +89,9 @@ const InvestingDetails: React.FC<InvestingDetailsProps> = () => {
         <Ripple duration={2000} />
         <IoMdAdd className="self-center" />
       </ButtonRipple>
+      {error && <p className="text-red-500">{error}</p>}
     </>
   );
-};
+});
 
 export default InvestingDetails;

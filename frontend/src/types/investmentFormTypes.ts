@@ -5,7 +5,6 @@ export type InvestmentDetails = {
 };
 
 export type InvestmentFormTypes = {
-  id: number;
   spreadsheetName: string;
   investments: InvestmentDetails[];
 };

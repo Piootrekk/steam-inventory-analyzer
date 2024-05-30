@@ -1,17 +1,24 @@
-import { LuFileSpreadsheet } from "react-icons/lu";
-import InputCustom from "../common/Input/InputCustom";
+import { InvestmentFormTypes } from "../../types/investmentFormTypes";
 
-type FinishInvestingProps = {};
+type FinishInvestingProps = {
+  data: InvestmentFormTypes;
+};
 
-const FinishInvesting: React.FC<FinishInvestingProps> = () => {
+const FinishInvesting: React.FC<FinishInvestingProps> = ({ data }) => {
   return (
     <>
-      <h2 className="flex flex-row gap-2 text-2xl">
-        <LuFileSpreadsheet size={24} className="self-center" />
-        Type Spreadsheet name:
-      </h2>
-
-      <InputCustom label="asde" widthClassName="w-1/5  min-w-48" />
+      <h2 className="flex flex-row gap-2 text-2xl">Summary</h2>
+      <h3 className="text-xl">Spreadsheet Name: {data.spreadsheetName}</h3>
+      <h3 className="text-xl">Investments:</h3>
+      <ul>
+        {data.investments.map((investment, index) => (
+          <li key={index}>
+            <h4 className="text-lg">
+              {investment.name} - {investment.boughtPrice} [PLN]
+            </h4>
+          </li>
+        ))}
+      </ul>
     </>
   );
 };
