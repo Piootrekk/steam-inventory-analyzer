@@ -10,6 +10,7 @@ const cacheMiddleware = (min: number) => {
 
     if (cachedBody) {
       const parsedBody = JSON.parse(cachedBody);
+      console.log("Cache hit");
       if (parsedBody.id) {
         parsedBody.id = uuidv4();
         parsedBody.time = getDateWithTime();
@@ -20,9 +21,10 @@ const cacheMiddleware = (min: number) => {
       const originalSend = res.send;
       res.send = (body): Response<any, Record<string, any>> => {
         if (res.statusCode >= 400) {
+          console.log("Cache miss due to error status code");
           return originalSend.call(res, body);
         }
-
+        console.log("Cache miss, saving to cache");
         cache.put(key, body, min * 60 * 1000);
         return originalSend.call(res, body);
       };

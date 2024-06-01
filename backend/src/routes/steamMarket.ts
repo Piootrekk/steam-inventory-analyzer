@@ -134,6 +134,7 @@ router.get(
   rateLimiterMiddleware(5),
   async (req, res) => {
     const query = req.params.query;
+    console.log(query);
     const response = await fetchMarketQuery(query);
     if (response.error) {
       return res.status(response.error.statusCode).json(response.error);

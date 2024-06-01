@@ -1,7 +1,8 @@
 import { FetchResponse, fetchAxiosResponse } from "./fetchResponse";
 
 export const proxyLinksGET = [
-  "https://proxy-express.azurewebsites.net/get/",
+  "https://proxy-ger.azurewebsites.net/get/",
+  "https://proxy-pl.azurewebsites.net/get/",
   "https://express-proxy-jnve.onrender.com/get/",
   "https://thingproxy.freeboard.io/fetch/",
 ];
