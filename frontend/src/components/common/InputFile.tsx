@@ -10,7 +10,7 @@ type InputFileProps = {
 const InputFile = forwardRef<HTMLInputElement, InputFileProps>(
   ({ label, widthClassName = "w-full", error, fileTypes, ...props }, ref) => {
     return (
-      <div className={`mb-4 ${widthClassName}`}>
+      <>
         <label className="block text-sm font-medium text-gray-500 mb-1 mx-1">
           {label}
         </label>
@@ -20,14 +20,16 @@ const InputFile = forwardRef<HTMLInputElement, InputFileProps>(
           accept={fileTypes}
           className={`
           text-gray-100 px-4 py-2 placeholder-transparent bg-slate-700 border-b-2 border-gray-400 rounded-md
-          hidden-scrollbar focus:outline-none resize-none
+          hidden-scrollbar focus:outline-none resize-none file:mr-4 file:py-2 file:px-4 file:rounded-full
+          file:border-0 file:text-sm file:font-semibold
+          file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100
           
           ${error && "border-red-500"}
         `}
           {...props}
         />
         {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
-      </div>
+      </>
     );
   }
 );

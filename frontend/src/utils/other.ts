@@ -1,8 +1,8 @@
 export const setPascalCase = (str: string) => {
   return str
-    .split(" ")
-    .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-    .join("");
+    .split(' ')
+    .map(word => word ? word[0].toUpperCase() + word.slice(1).toLowerCase() : '')
+    .join(' ');
 };
 
 export const SetUrlDecoded = (str: string) => {
@@ -16,6 +16,8 @@ export const SetUrlEncoded = (str: string) => {
 export const CamelCaseToWords = (str: string) => {
   return str
     .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (s) => s.toUpperCase())
+    .split(' ')
+    .map(word => word ? word[0].toUpperCase() + word.slice(1).toLowerCase() : '')
+    .join(' ')
     .trim();
 };

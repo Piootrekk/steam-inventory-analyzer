@@ -1,4 +1,5 @@
 import { InvestmentDetails } from "../../../types/investmentFormTypes";
+import InputFile from "../../common/InputFile";
 
 type DetailsViaFileInputProps = {
   setInvestmentDetails: React.Dispatch<
@@ -9,8 +10,8 @@ type DetailsViaFileInputProps = {
 
 const DetailsViaFileInput: React.FC<DetailsViaFileInputProps> = () => {
   return (
-    <div>
-      <h1>DetailsViaFileInput</h1>
+    <div className="flex flex-col items-center justify-center w-full">
+      <InputFile label="Upload File" fileTypes=".json" />
     </div>
   );
 };

@@ -13,7 +13,7 @@ import Ripple from "../common/Button/Ripple";
 import { CamelCaseToWords } from "../../utils/other";
 import ComponentPaginationWithPropsInBulk from "../common/ComponentPagination";
 
-const methods = ["textInput", "fileInput", "textArea"] as const;
+const methods = ["textInput", "textArea", "fileInput"] as const;
 type Methods = (typeof methods)[number];
 
 const InvestingDetails = forwardRef((_, ref) => {
@@ -56,7 +56,7 @@ const InvestingDetails = forwardRef((_, ref) => {
         footer={TableFooter(investmentDetails)}
       />
       <h2 className="text-xl text-gray-100 mt-4">Select method</h2>
-      <div className="flex flex-row gap-2 mt-2 flex-wrap justify-center items-center">
+      <div className="flex flex-row gap-2 flex-wrap justify-center items-center">
         {methods.map((m) => (
           <ButtonRipple
             key={m}
@@ -74,9 +74,9 @@ const InvestingDetails = forwardRef((_, ref) => {
         <ComponentPaginationWithPropsInBulk
           page={methods.indexOf(method)}
           components={[
-            DetailsViaFileInput,
-            DetailsViaTextArea,
             DetailsViaTextInput,
+            DetailsViaTextArea,
+            DetailsViaFileInput,
           ]}
           commonProps={{
             setInvestmentDetails,
