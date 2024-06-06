@@ -1,6 +1,12 @@
 export const parserToObject = <T>(str: string): T => {
   try {
-    return JSON.parse(str) as T;
+    const obj = JSON.parse(str) as T;
+
+    if (!obj) {
+      throw new Error("Invalid JSON format");
+    }
+
+    return obj;
   } catch (error) {
     throw new Error("Invalid JSON format");
   }
