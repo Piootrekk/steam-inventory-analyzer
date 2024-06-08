@@ -5,6 +5,7 @@ import Inventory from "../views/Inventory";
 import ItemPriceView from "../views/ItemPriceView";
 import DefaultLayout from "../layout/DefaultLayout";
 import InvestmentsView from "../views/InvestmentsView";
+import CreatingProcess from "../components/Investments/CreatingProcess";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/investments",
         element: <InvestmentsView />,
+      },
+      {
+        path: "/investments/create",
+        element: <CreatingProcess />,
       },
       {
         path: "*",

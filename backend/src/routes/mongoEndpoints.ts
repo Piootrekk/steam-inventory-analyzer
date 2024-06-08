@@ -51,6 +51,7 @@ router.get("/investments", authMiddleware, async (req, res) => {
     if (!user) return res.status(401).json({ message: "Unauthorized" });
 
     const investments = await Investment.find({ steamId: user._json.steamid });
+    console.log(investments);
     res.json(investments);
   } catch (err) {
     res.status(500).json({ error: err });
@@ -58,25 +59,22 @@ router.get("/investments", authMiddleware, async (req, res) => {
 });
 
 router.post("/add-investment", authMiddleware, async (req, res) => {
-  try {
-    const user = req.user as AuthenticatedUser;
-    const investmentData: InvestmentFormTypes = {
-      steamId: user._json.steamid,
-      spreadsheetName: req.body.spreadsheetName,
-      investments: req.body.investments,
-    };
+  const user = req.user as AuthenticatedUser;
+  console.log(req.body);
+  const investmentData: InvestmentFormTypes = {
+    steamId: user._json.steamid,
+    spreadsheetName: req.body.spreadsheetName,
+    investments: req.body.investments,
+  };
 
-    const newInvestment = new Investment({
-      steamId: investmentData.steamId,
-      spreadsheetName: investmentData.spreadsheetName,
-      investment: investmentData.investments,
-    });
-    await newInvestment.save();
+  const newInvestment = new Investment({
+    steamId: investmentData.steamId,
+    spreadsheetName: investmentData.spreadsheetName,
+    investment: investmentData.investments,
+  });
+  await newInvestment.save();
 
-    res.json(newInvestment);
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
+  res.json(newInvestment);
 });
 
 router.delete("/delete-investment/:id", authMiddleware, async (req, res) => {

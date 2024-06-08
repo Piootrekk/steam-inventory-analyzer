@@ -12,6 +12,7 @@ import {
 } from "../../types/investmentFormTypes";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { TfiSave } from "react-icons/tfi";
+import { baseBackendURL } from "../../env";
 
 type FormCreatingProps = {
   page: number;
@@ -33,6 +34,18 @@ const FormCreating: React.FC<FormCreatingProps> = ({
     spreadsheetName: "",
     investments: [],
   });
+
+  const sendInvestmentData = async () => {
+    const response = await fetch(`${baseBackendURL}/add-investment`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  };
 
   useEffect(() => {
     if (page === 0 && spreedsheetCreateRef.current) {
@@ -112,7 +125,7 @@ const FormCreating: React.FC<FormCreatingProps> = ({
         {page === maxPage && (
           <ButtonRipple
             className="w-1/6 min-w-32 bg-green-600 items-center flex justify-center gap-x-1"
-            onClick={() => console.log(data)}
+            onClick={sendInvestmentData}
           >
             <TfiSave />
             Save

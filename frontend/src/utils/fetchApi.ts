@@ -1,7 +1,9 @@
-export const fetchApiJson = async (url: string) => {
+import { FetchType } from "../types/fetchType";
+
+export const fetchApiJson = async ({ url, type = "GET" }: FetchType) => {
   try {
     const response = await fetch(url, {
-      method: "GET",
+      method: type,
       credentials: "include",
     });
     return await response.json();

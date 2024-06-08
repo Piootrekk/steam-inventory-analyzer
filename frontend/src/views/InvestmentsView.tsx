@@ -1,9 +1,9 @@
-import NotCreated from "../components/Investments/NotCreated";
+import InvestmentMainPage from "../components/Investments/InvestmentMainPage";
 
 const InvestmentsView = () => {
   return (
     <>
-      <NotCreated />
+      <InvestmentMainPage />
     </>
   );
 };

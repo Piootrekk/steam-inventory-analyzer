@@ -1,11 +1,9 @@
 import ContentWrapper from "../wrapper/ContentWrapper";
 import ButtonRipple from "../common/Button/ButtonRipple";
 import Ripple from "../common/Button/Ripple";
-import CreatingProcess from "./CreatingProcess";
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const NotCreated: React.FC = () => {
-  const [create, setCreate] = useState(false);
   return (
     <>
       <ContentWrapper className="m-12 p-12 ">
@@ -14,18 +12,14 @@ const NotCreated: React.FC = () => {
           you like to create one?
         </h1>
         <div className="flex justify-center mt-10">
-          <ButtonRipple
-            className="w-1/4 px-4 py-3 items-center flex justify-center min-w-48"
-            onClick={() => {
-              setCreate((prev) => !prev);
-            }}
-          >
-            <Ripple duration={2000} />
-            Create Spreadsheet
-          </ButtonRipple>
+          <NavLink to="/investments/create">
+            <ButtonRipple className="w-1/4 px-4 py-3 items-center flex justify-center min-w-48">
+              <Ripple duration={2000} />
+              Create Spreadsheet
+            </ButtonRipple>
+          </NavLink>
         </div>
       </ContentWrapper>
-      {create && <CreatingProcess />}
     </>
   );
 };
