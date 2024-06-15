@@ -1,6 +1,6 @@
 import { baseBackendURL } from "../../env";
 import useFetch from "../../hooks/useFetch";
-import { InvestmentDetails } from "../../types/investmentFormTypes";
+import { ResponseInvestmentTemplate } from "../../types/mongoResponseTypes";
 import IsLoading from "../common/IsLoading";
 import InvestmentsData from "./InvestmentsData";
 import NotCreated from "./NotCreated";
@@ -8,7 +8,7 @@ import NotCreated from "./NotCreated";
 type InvestmentMainPage = {};
 
 const InvestmentMainPage: React.FC<InvestmentMainPage> = () => {
-  const { data, isLoading, error } = useFetch<InvestmentDetails[]>({
+  const { data, isLoading, error } = useFetch<ResponseInvestmentTemplate[]>({
     url: `${baseBackendURL}/investments`,
   });
 
@@ -25,7 +25,7 @@ const InvestmentMainPage: React.FC<InvestmentMainPage> = () => {
   if (data?.length === 0) {
     return <NotCreated />;
   } else {
-    return <InvestmentsData data={data!} />;
+    return <InvestmentsData data={data} />;
   }
 };
 
