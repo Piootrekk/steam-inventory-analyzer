@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 import { TbListDetails } from "react-icons/tb";
 
 import { InvestmentDetails } from "../../types/investmentFormTypes";
-import CustomTable from "../common/CustomTable";
+import CustomTable from "../common/Table/CustomTable";
 import { TableBody, TableFooter } from "./TableConfig";
 
 import DetailsViaFileInput from "./InvestingDetailsManner/DetailsViaFileInput";
@@ -10,7 +10,7 @@ import DetailsViaTextInput from "./InvestingDetailsManner/DetailsViaTextInput";
 import DetailsViaTextArea from "./InvestingDetailsManner/DetailsViaTextArea";
 import ButtonRipple from "../common/Button/ButtonRipple";
 import Ripple from "../common/Button/Ripple";
-import { CamelCaseToWords } from "../../utils/other";
+import { camelCaseToWords } from "../../utils/other";
 import ComponentPaginationWithPropsInBulk from "../common/ComponentPagination";
 
 const methods = ["textInput", "textArea", "fileInput"] as const;
@@ -52,7 +52,8 @@ const InvestingDetails = forwardRef((_, ref) => {
       </h2>
       <CustomTable
         data={investmentDetails}
-        columns={TableBody(setInvestmentDetails)}
+        setData={setInvestmentDetails}
+        columns={TableBody()}
         footer={TableFooter(investmentDetails)}
       />
       <h2 className="text-xl text-gray-100 mt-4">Select method</h2>
@@ -65,7 +66,7 @@ const InvestingDetails = forwardRef((_, ref) => {
             }`}
             onClick={() => setMethod(m)}
           >
-            {CamelCaseToWords(m)}
+            {camelCaseToWords(m)}
             <Ripple duration={1500} />
           </ButtonRipple>
         ))}

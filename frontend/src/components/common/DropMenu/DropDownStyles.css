@@ -1,5 +1,5 @@
 .dropdownProfile {
-  @apply absolute right-[-1.2rem] bg-[rgb(var(--dark-primary))] rounded-lg shadow-md border border-[rgb(var(--dark-tertiary))] z-10;
+  @apply absolute right-[-1.2rem] bg-[rgb(var(--dark-primary))] rounded-lg shadow-md border border-[rgb(var(--dark-tertiary))]  z-50;
 }
 
 .dropdownProfile::before {

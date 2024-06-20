@@ -1,48 +1,30 @@
-import React from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { InvestmentDetails } from "../../types/investmentFormTypes";
+import { Column } from "../common/Table/CustomTable";
+import { camelCaseToWords, parserToFloat } from "../../utils/other";
 
-export const TableBody = (
-  setInvestmentDetails: React.Dispatch<
-    React.SetStateAction<InvestmentDetails[]>
-  >
-) => {
-  const resetIds = (details: InvestmentDetails[]): InvestmentDetails[] => {
-    return details.map((item, index) => ({
-      ...item,
-      id: index + 1,
-    }));
-  };
-
+export const TableBody = () => {
   return [
     {
       header: "No.",
       accessor: (row: InvestmentDetails) => row.id,
+      editable: false,
+      key: "id",
     },
     {
       header: "Item Name",
       accessor: (row: InvestmentDetails) => row.name,
+      editable: true,
+      key: "name",
+      modifier: (value: string) => camelCaseToWords(value),
     },
     {
       header: "Buy Order Price",
       accessor: (row: InvestmentDetails) => row.boughtPrice,
+      editable: true,
+      key: "boughtPrice",
+      modifier: (value: string) => parserToFloat(value),
     },
-    {
-      header: "Remove",
-      accessor: (row: InvestmentDetails) => (
-        <button
-          className="text-red-500"
-          onClick={() =>
-            setInvestmentDetails((prev) =>
-              resetIds(prev.filter((item) => item.id !== row.id))
-            )
-          }
-        >
-          <FaRegTrashAlt size={24} className="self-center" />
-        </button>
-      ),
-    },
-  ];
+  ] as Column<InvestmentDetails>[];
 };
 
 export const TableFooter = (investmentDetails: InvestmentDetails[]) => {

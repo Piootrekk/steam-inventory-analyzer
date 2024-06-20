@@ -4,7 +4,7 @@ import InputCustom from "../../common/Input/InputCustom";
 import { IoMdAdd } from "react-icons/io";
 import ButtonRipple from "../../common/Button/ButtonRipple";
 import Ripple from "../../common/Button/Ripple";
-import {CamelCaseToWords} from "../../../utils/other";
+import { camelCaseToWords, parserToFloat } from "../../../utils/other";
 
 type DetailsViaTextInputProps = {
   setInvestmentDetails: React.Dispatch<
@@ -32,8 +32,8 @@ const DetailsViaTextInput: React.FC<DetailsViaTextInputProps> = ({
           ...prev,
           {
             id: prev.length + 1,
-            name: CamelCaseToWords(nameRef.current!.value),
-            boughtPrice: +parseFloat(priceRef.current!.value).toFixed(2),
+            name: camelCaseToWords(nameRef.current!.value),
+            boughtPrice: parserToFloat(priceRef.current!.value),
           },
         ])
       );

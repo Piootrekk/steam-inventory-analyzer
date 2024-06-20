@@ -13,6 +13,7 @@ import {
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { TfiSave } from "react-icons/tfi";
 import { baseBackendURL } from "../../env";
+import { useNavigate } from "react-router-dom";
 
 type FormCreatingProps = {
   page: number;
@@ -35,6 +36,7 @@ const FormCreating: React.FC<FormCreatingProps> = ({
     investments: [],
   });
 
+  const navigate = useNavigate();
   const sendInvestmentData = async () => {
     const response = await fetch(`${baseBackendURL}/add-investment`, {
       method: "POST",
@@ -44,7 +46,10 @@ const FormCreating: React.FC<FormCreatingProps> = ({
       },
       body: JSON.stringify(data),
     });
-    return await response.json();
+    if (response.ok) {
+      console.log("Investment data sent successfully");
+      navigate("/investments");
+    }
   };
 
   useEffect(() => {

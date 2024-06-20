@@ -1,5 +1,5 @@
 .step-item {
-  @apply relative flex flex-col justify-center items-center w-full md:w-60 sm:w-40 lg:w-96;
+  @apply relative flex flex-col justify-center items-center w-full md:w-52 sm:w-40 lg:w-80;
 }
 
 .step-item:not(:first-child)::before {
