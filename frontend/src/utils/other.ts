@@ -27,5 +27,6 @@ export const camelCaseToWords = (str: string) => {
 };
 
 export const parserToFloat = (str: string) => {
+  if (isNaN(parseFloat(str))) return 0;
   return +parseFloat(str).toFixed(2);
 };

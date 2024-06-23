@@ -55,6 +55,8 @@ const InvestingDetails = forwardRef((_, ref) => {
         setData={setInvestmentDetails}
         columns={TableBody()}
         footer={TableFooter(investmentDetails)}
+        remove
+        editable
       />
       <h2 className="text-xl text-gray-100 mt-4">Select method</h2>
       <div className="flex flex-row gap-2 flex-wrap justify-center items-center">

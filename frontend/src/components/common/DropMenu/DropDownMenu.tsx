@@ -6,12 +6,14 @@ export type DropDownMenuProps = {
   isOpen: boolean;
   elements?: React.ReactNode[];
   setIsOpen: (value: boolean) => void;
+  className?: string;
 };
 
 const DropDownMenu: React.FC<DropDownMenuProps> = ({
   isOpen,
   elements,
   setIsOpen,
+  className,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   useClickOutside(menuRef, () => setIsOpen(false));
@@ -19,9 +21,10 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
   return (
     <div className="relative" ref={menuRef}>
       <div
-        className={`flex flex-col dropdownProfile ${
+        className={`right-[-1.2rem] ${className} flex flex-col dropdownProfile ${
           isOpen ? "dropdownActive" : "dropdownInactive"
-        } `}
+        }
+        `}
       >
         {elements?.map((element, index) => (
           <ul className="flex flex-col gap-5" key={index}>
@@ -34,5 +37,3 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
 };
 
 export default DropDownMenu;
-
-

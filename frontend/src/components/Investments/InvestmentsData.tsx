@@ -6,21 +6,17 @@ import { InvestmentDetails } from "../../types/investmentFormTypes";
 import { useState } from "react";
 import CustomTable from "../common/Table/CustomTable";
 import { TableBody, TableFooter } from "./TableConfig";
-import { LuFileSpreadsheet } from "react-icons/lu";
 import { NavLink } from "react-router-dom";
+import InvestmentsSpreadsheets from "./InvestmentsSpreedsheets";
 
 type InvestmentsDataProps = {
-  data: ResponseInvestmentTemplate[] | null;
+  data: ResponseInvestmentTemplate[];
 };
 
 const InvestmentsData: React.FC<InvestmentsDataProps> = ({ data }) => {
   const [investmentDetails, setInvestmentDetails] = useState<
     InvestmentDetails[]
   >([]);
-  const handleInvestmentClick = (investment: InvestmentDetails[]) => {
-    setInvestmentDetails(investment);
-    console.log(investment);
-  };
 
   return (
     <>
@@ -35,27 +31,13 @@ const InvestmentsData: React.FC<InvestmentsDataProps> = ({ data }) => {
           </NavLink>
         </div>
       </ContentWrapper>
-
       <ContentWrapper className="m-12 p-12">
-        <div className="flex flex-row justify-center ">
-          <ul>
-            {data?.map((el) => (
-              <li key={el._id}>
-                <ButtonRipple
-                  className=" min-w-32 px-4 py-3 items-center flex  m-2  p-2"
-                  onClick={() => handleInvestmentClick(el.investment)}
-                >
-                  <span className="flex flex-row justify-start gap-2">
-                    <LuFileSpreadsheet className="size-7 flex  text-clip" />
-                    {el.spreadsheetName}
-                  </span>
-                  <Ripple duration={1500} />
-                </ButtonRipple>
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-col  w-full ">
+        <InvestmentsSpreadsheets
+          data={data}
+          setInvestmentDetails={setInvestmentDetails}
+        />
+        <div className="flex flex-row justify-center">
+          <div className="flex flex-col w-full">
             {investmentDetails.length > 0 && (
               <>
                 <h2 className="flex justify-center text-2xl text-gray-100">

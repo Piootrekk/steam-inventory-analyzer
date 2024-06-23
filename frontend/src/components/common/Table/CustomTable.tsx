@@ -14,23 +14,29 @@ type CustomTableProps<T> = {
   data: T[];
   setData: React.Dispatch<React.SetStateAction<T[]>>;
   columns: Column<T>[];
+  remove?: boolean;
+  editable?: boolean;
   footer?: React.ReactNode;
+};
+
+type CurrentCell = {
+  rowId: number;
+  colId: number;
 };
 
 const CustomTable = <T,>({
   data,
   setData,
   columns,
+  remove,
+  editable,
   footer,
 }: CustomTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [currentCell, setCurrentCell] = useState<{
-    rowId: number;
-    colId: number;
-  } | null>(null);
+  const [currentCell, setCurrentCell] = useState<CurrentCell | null>(null);
   const [currentValue, setCurrentValue] = useState("");
 
   const cellRef = useRef<HTMLInputElement>(null);
@@ -61,6 +67,7 @@ const CustomTable = <T,>({
     colId: number,
     value: string
   ) => {
+    if (!editable) return;
     setCurrentCell({ rowId, colId });
     setCurrentValue(value);
   };
@@ -116,7 +123,14 @@ const CustomTable = <T,>({
     setData(resetIds(updatedData));
   };
 
-  const itemsPerPageOptions = [10, 25, 50, 100, 200];
+  const itemsPerPageOptions = [
+    10,
+    25,
+    50,
+    100,
+    ...(data.length > 0 ? [data.length] : []),
+  ];
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -158,7 +172,7 @@ const CustomTable = <T,>({
               {column.header}
             </th>
           ))}
-          <th className="px-4 py-2 border-b border-gray-600">Remove</th>
+          {remove && <th className="px-4 py-2 border-b border-gray-600"></th>}
         </tr>
       </thead>
       <tbody>
@@ -182,6 +196,7 @@ const CustomTable = <T,>({
                   }
                 >
                   {column.editable &&
+                  editable &&
                   currentCell?.rowId === rowIndex + 1 &&
                   currentCell?.colId === colIndex ? (
                     <input
@@ -196,14 +211,16 @@ const CustomTable = <T,>({
                   )}
                 </td>
               ))}
-              <td className="px-4 py-2 border-b border-gray-600">
-                <button
-                  className="text-red-500"
-                  onClick={() => handleRemove(rowIndex + 1)}
-                >
-                  <FaRegTrashAlt size={24} className="self-center" />
-                </button>
-              </td>
+              {remove && (
+                <td className="px-4 py-2 border-b border-gray-600">
+                  <button
+                    className="text-red-500"
+                    onClick={() => handleRemove(rowIndex + 1)}
+                  >
+                    <FaRegTrashAlt size={24} className="self-center" />
+                  </button>
+                </td>
+              )}
             </tr>
           ))
         ) : (

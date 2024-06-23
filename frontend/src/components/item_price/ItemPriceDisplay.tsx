@@ -16,7 +16,7 @@ const ItemPriceDisplay: React.FC<ItemPriceDisplayProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-3 justify-center  ">
+    <div className="flex flex-wrap gap-3 justify-center">
       {data.map((item) => (
         <div key={item.id}>
           <ContentWrapper className="shadow-md rounded-lg p-4 max-w-[240px] min-w-[240px] relative">
