@@ -1,12 +1,11 @@
 import axios from "axios";
 import { TInventoryResponse } from "./inventory.types";
 import { margeAssetWithDescriptions, sumByClassid } from "./inventory.utils";
+import { TSupportedGames } from "./games.type";
 
-type TSupportedGames = "730" | "440" | "252490";
-
-const fetchInventory = async (steamid64: string, gameId: TSupportedGames) => {
+const fetchInventory = async (steamid64: string, game: TSupportedGames) => {
   const url = new URL(
-    `https://steamcommunity.com/inventory/${steamid64}/${gameId}/2`
+    `https://steamcommunity.com/inventory/${steamid64}/${game}/2`
   );
   const params = new URLSearchParams({
     l: "english",

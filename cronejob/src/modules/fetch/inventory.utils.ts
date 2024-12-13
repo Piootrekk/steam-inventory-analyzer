@@ -46,7 +46,8 @@ const margeAssetWithDescriptions = (
       marketable,
     } = correspondingItem;
 
-    const desc: TDescription = {
+    return {
+      ...asset,
       appid,
       classid,
       instanceid,
@@ -63,8 +64,6 @@ const margeAssetWithDescriptions = (
       market_marketable_restriction,
       marketable,
     };
-
-    return { ...asset, ...desc };
   });
   return marged;
 };
