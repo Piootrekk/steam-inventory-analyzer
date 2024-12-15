@@ -1,6 +1,5 @@
 import {
   TAsset,
-  TDescription,
   TDescriptionExtended,
   TInventory,
   TUniqueClassId,
@@ -44,6 +43,7 @@ const margeAssetWithDescriptions = (
       market_tradable_restriction,
       market_marketable_restriction,
       marketable,
+      name,
     } = correspondingItem;
 
     return {
@@ -63,6 +63,7 @@ const margeAssetWithDescriptions = (
       market_tradable_restriction,
       market_marketable_restriction,
       marketable,
+      name,
     };
   });
   return marged;

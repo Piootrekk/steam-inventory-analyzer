@@ -23,6 +23,7 @@ type TDescription = {
   name_color: string;
   type: string;
   market_name: string;
+  name: string;
   market_hash_name: string;
   commodity: number;
   market_tradable_restriction: number;
@@ -50,4 +51,3 @@ export type {
   TInventory,
   TDescriptionExtended,
 };
-

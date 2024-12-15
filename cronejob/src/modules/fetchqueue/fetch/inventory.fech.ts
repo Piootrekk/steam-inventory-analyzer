@@ -3,9 +3,14 @@ import { TInventoryResponse } from "./inventory.types";
 import { margeAssetWithDescriptions, sumByClassid } from "./inventory.utils";
 import { TSupportedGames } from "./games.type";
 
-const fetchInventory = async (steamid64: string, game: TSupportedGames) => {
+const fetchInventory = async (
+  steamid64: string,
+  game: TSupportedGames,
+  proxy?: string
+) => {
+  const inventoryEndpoint = `https://steamcommunity.com/inventory/${steamid64}/${game}/2`;
   const url = new URL(
-    `https://steamcommunity.com/inventory/${steamid64}/${game}/2`
+    `${proxy ? proxy + inventoryEndpoint : inventoryEndpoint}`
   );
   const params = new URLSearchParams({
     l: "english",
@@ -20,7 +25,7 @@ const fetchInventory = async (steamid64: string, game: TSupportedGames) => {
     summariesItems,
     response.data.descriptions
   );
-  console.log(totalItems);
+  return totalItems;
 };
 
 export { fetchInventory };

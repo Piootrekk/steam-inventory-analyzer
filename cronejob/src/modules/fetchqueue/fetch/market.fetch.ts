@@ -5,9 +5,11 @@ const fetchItemPrice = async (
   name: string,
   game: TSupportedGames,
   currency: string = "6",
-  language: string = "english"
+  language: string = "english",
+  proxie?: string
 ) => {
-  const url = new URL("https://steamcommunity.com/market/priceoverview/");
+  const marketEndpoint = "https://steamcommunity.com/market/priceoverview/";
+  const url = new URL(`${proxie ? proxie + marketEndpoint : marketEndpoint}`);
   const params = new URLSearchParams({
     appid: game,
     currency: currency,
@@ -28,9 +30,11 @@ const fetchItemPrice = async (
 const fetchItemWithDetails = async (
   name: string,
   game: TSupportedGames,
-  language: string = "english"
+  language: string = "english",
+  proxy?: string
 ) => {
-  const url = new URL("https://steamcommunity.com/market/search/render/");
+  const marketEndpoint = "https://steamcommunity.com/market/search/render/";
+  const url = new URL(`${proxy ? proxy + marketEndpoint : marketEndpoint}`);
   const params = new URLSearchParams({
     query: name,
     start: "0",
@@ -49,4 +53,4 @@ const fetchItemWithDetails = async (
   };
 };
 
-export { fetchItemPrice };
+export { fetchItemPrice, fetchItemWithDetails };

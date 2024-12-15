@@ -1,6 +1,6 @@
 import MongoDB from "./modules/mongodb/mongodb";
 import { getMongoDBConString } from "./config/env";
-import { fetchInventory } from "./modules/fetch/inventory.fech";
+import { fetchInventory } from "./modules/fetchqueue/fetch/inventory.fech";
 
 const MONGODB_CON_STRING = getMongoDBConString();
 
