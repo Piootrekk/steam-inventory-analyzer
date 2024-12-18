@@ -1,6 +1,7 @@
 import axios from "axios";
 import { TSupportedGames } from "./games.type";
 import { TMarketDetails, TMarketPrice } from "./market.type";
+
 const fetchItemPrice = async (
   name: string,
   game: TSupportedGames,

@@ -2,12 +2,13 @@ import axios from "axios";
 import { TInventoryResponse } from "./inventory.types";
 import { margeAssetWithDescriptions, sumByClassid } from "./inventory.utils";
 import { TSupportedGames } from "./games.type";
+import { TFetchedInventory } from "../../inventory/inventory.type";
 
 const fetchInventory = async (
   steamid64: string,
   game: TSupportedGames,
   proxy?: string
-) => {
+): Promise<TFetchedInventory> => {
   const inventoryEndpoint = `https://steamcommunity.com/inventory/${steamid64}/${game}/2`;
   const url = new URL(
     `${proxy ? proxy + inventoryEndpoint : inventoryEndpoint}`
@@ -25,7 +26,14 @@ const fetchInventory = async (
     summariesItems,
     response.data.descriptions
   );
-  return totalItems;
+  console.log(
+    `TIME: ${new Date().toLocaleString()}, STEAMID: ${steamid64}, GAME: ${game}, PROXY: ${proxy}`
+  );
+  return {
+    steamid: steamid64,
+    game: game,
+    inventory: totalItems,
+  };
 };
 
 export { fetchInventory };
