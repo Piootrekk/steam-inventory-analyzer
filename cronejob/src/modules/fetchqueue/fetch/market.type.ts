@@ -57,4 +57,20 @@ type TMarketDetails =
       success: false;
     } & Record<string, never>);
 
-export type { TMarketPrice, TMarketDetails };
+type TResponseMarketPrice = {
+  price: string;
+  median: string;
+  sold_today: string;
+  hash_name: string;
+};
+
+type TResponseMarketDetails = {
+  total_items: number;
+};
+
+export type {
+  TMarketPrice,
+  TMarketDetails,
+  TResponseMarketPrice,
+  TResponseMarketDetails,
+};

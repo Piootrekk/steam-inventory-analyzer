@@ -23,14 +23,19 @@ const margeAssetWithDescriptions = (
 ): TInventory[] => {
   const marged: TInventory[] = assets.map((asset) => {
     const correspondingItem = descriptions.find(
-      (item) => (item.classid = asset.classid)
+      (item) => item.classid === asset.classid
     );
     if (!correspondingItem) throw new Error("Smth went wrong");
-
+    correspondingItem.market_marketable_restriction === undefined
+      ? (correspondingItem.market_marketable_restriction = 0)
+      : correspondingItem.market_marketable_restriction;
+    correspondingItem.market_tradable_restriction === undefined
+      ? (correspondingItem.market_tradable_restriction = 0)
+      : correspondingItem.market_tradable_restriction;
     const {
       appid,
-      classid,
       instanceid,
+      classid,
       currency,
       background_color,
       icon_url,

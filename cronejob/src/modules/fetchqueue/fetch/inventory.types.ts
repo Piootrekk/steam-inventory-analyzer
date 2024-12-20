@@ -26,8 +26,8 @@ type TDescription = {
   name: string;
   market_hash_name: string;
   commodity: number;
-  market_tradable_restriction: number;
-  market_marketable_restriction: number;
+  market_tradable_restriction: 1 | 0 | undefined;
+  market_marketable_restriction: 1 | 0 | undefined;
   marketable: 1 | 0;
 };
 
