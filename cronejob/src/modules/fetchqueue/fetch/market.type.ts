@@ -1,9 +1,9 @@
 type TMarketPrice =
   | {
       success: true;
-      lowest_price: string;
-      volume: string;
-      median_price: string;
+      lowest_price?: string;
+      volume?: string;
+      median_price?: string;
     }
   | {
       success: false;
@@ -58,9 +58,9 @@ type TMarketDetails =
     } & Record<string, never>);
 
 type TResponseMarketPrice = {
-  price: string;
-  median: string;
-  sold_today: string;
+  price?: string;
+  median?: string;
+  sold_today?: string;
   hash_name: string;
 };
 

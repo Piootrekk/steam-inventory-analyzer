@@ -6,6 +6,7 @@ import {
   TResponseMarketDetails,
   TResponseMarketPrice,
 } from "./market.type";
+import convertError from "../../../config/error-converter";
 
 const fetchItemPrice = async (
   name: string,
@@ -21,20 +22,27 @@ const fetchItemPrice = async (
     l: "english",
   });
   url.search = params.toString();
-  console.log(`URL: ${url.href}`);
-  console.log("tut");
-  const response = await axios.get<TMarketPrice>(url.href);
-  if (!response.data) throw new Error("Fetch inventory went wrong");
-  if (!response.data.success) throw new Error("Fetching success - false");
-  console.log(
-    `TIME: ${new Date().toLocaleString()}, ITEM: ${name}, GAME: ${game}, PROXY: ${proxy}`
-  );
-  return {
-    price: response.data.lowest_price,
-    median: response.data.median_price,
-    sold_today: response.data.volume,
-    hash_name: name,
-  };
+  try {
+    const response = await axios.get<TMarketPrice>(url.href);
+    if (!response.data) throw new Error("Fetch inventory went wrong");
+    if (!response.data.success) throw new Error("Fetching success - false");
+    console.log(
+      `TIME: ${new Date().toLocaleString()}, ITEM: ${name}, GAME: ${game}, PROXY: ${proxy}`
+    );
+
+    return {
+      price: response.data.lowest_price,
+      median: response.data.median_price,
+      sold_today: response.data.volume,
+      hash_name: name,
+    };
+  } catch (error) {
+    const convertedError = convertError(error);
+    console.log(convertedError.message);
+    throw new Error(
+      `ERROR: ${convertedError.message}, NAME: ${name}, GAME: ${game}`
+    );
+  }
 };
 
 const fetchItemWithDetails = async (

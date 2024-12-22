@@ -4,7 +4,7 @@ import { TResponseMarketPrice } from "../fetch/market.type";
 import { TResponseInventory } from "../inventory/inventory.type";
 
 type TNameWithGame = {
-  name: string;
+  market_hash_name: string;
   game: TSupportedGames;
 };
 
@@ -26,18 +26,18 @@ class Market {
             invDetails.market_marketable_restriction !== 0
         )
         .map((invDetails) => ({
-          name: invDetails.name,
+          market_hash_name: invDetails.market_hash_name,
           game: inventory.game,
         }));
     });
-    console.log(`DEFINED ${martketable.length} ITEMS TO PRASE PRICE`);
+    console.log(`DEFINED ${martketable.length} ITEMS TO PARSE PRICE`);
     return martketable;
   }
 
   private calculateTasks() {
     return this.namesWithGame.map((nameWithGame) => {
       return (proxy?: string) =>
-        fetchItemPrice(nameWithGame.name, nameWithGame.game, proxy);
+        fetchItemPrice(nameWithGame.market_hash_name, nameWithGame.game, proxy);
     });
   }
 
