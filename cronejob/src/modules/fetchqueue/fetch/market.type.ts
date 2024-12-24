@@ -57,20 +57,20 @@ type TMarketDetails =
       success: false;
     } & Record<string, never>);
 
-type TResponseMarketPrice = {
+type TMarketPriceDTO = {
   price?: string;
   median?: string;
   sold_today?: string;
   hash_name: string;
 };
 
-type TResponseMarketDetails = {
+type TMarketDetailsDTO = {
   total_items: number;
 };
 
 export type {
   TMarketPrice,
   TMarketDetails,
-  TResponseMarketPrice,
-  TResponseMarketDetails,
+  TMarketPriceDTO,
+  TMarketDetailsDTO,
 };

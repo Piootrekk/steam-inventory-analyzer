@@ -1,15 +1,15 @@
 import { TSupportedGames } from "../fetch/games.type";
 import { TInventory } from "../fetch/inventory.types";
 import {
-  TResponseMarketDetails,
-  TResponseMarketPrice,
+  TMarketDetailsDTO,
+  TMarketPriceDTO,
 } from "../fetch/market.type";
 
-type TResponseInventory = {
+type TInventoryDTO = {
   steamid: string;
   game: TSupportedGames;
   inventory: TInventory[];
-} & Partial<TResponseMarketPrice> &
-  Partial<TResponseMarketDetails>;
+} & Partial<TMarketPriceDTO> &
+  Partial<TMarketDetailsDTO>;
 
-export type { TResponseInventory };
+export type { TInventoryDTO };

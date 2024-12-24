@@ -1,7 +1,7 @@
 import { TSupportedGames } from "../fetch/games.type";
 import { fetchItemPrice } from "../fetch/market.fetch";
-import { TResponseMarketPrice } from "../fetch/market.type";
-import { TResponseInventory } from "../inventory/inventory.type";
+import { TMarketPriceDTO } from "../fetch/market.type";
+import { TInventoryDTO } from "../inventory/inventory.type";
 
 type TNameWithGame = {
   market_hash_name: string;
@@ -10,14 +10,14 @@ type TNameWithGame = {
 
 class Market {
   private namesWithGame: TNameWithGame[];
-  private tasks: ((proxy?: string) => Promise<TResponseMarketPrice>)[];
+  private tasks: ((proxy?: string) => Promise<TMarketPriceDTO>)[];
 
-  public constructor(inventories: TResponseInventory[]) {
+  public constructor(inventories: TInventoryDTO[]) {
     this.namesWithGame = this.getMarketableItems(inventories);
     this.tasks = this.calculateTasks();
   }
 
-  private getMarketableItems(inventories: TResponseInventory[]) {
+  private getMarketableItems(inventories: TInventoryDTO[]) {
     const martketable: TNameWithGame[] = inventories.flatMap((inventory) => {
       return inventory.inventory
         .filter(
@@ -30,8 +30,17 @@ class Market {
           game: inventory.game,
         }));
     });
-    console.log(`DEFINED ${martketable.length} ITEMS TO PARSE PRICE`);
-    return martketable;
+    const uniqueMarketable = Array.from(
+      new Map(
+        martketable.map((item) => [
+          `${item.market_hash_name}_${item.game}`,
+          item,
+        ])
+      ).values()
+    );
+
+    console.log(`DEFINED ${uniqueMarketable.length} ITEMS TO PARSE PRICE`);
+    return uniqueMarketable;
   }
 
   private calculateTasks() {

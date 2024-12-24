@@ -3,8 +3,8 @@ import { TSupportedGames } from "./games.type";
 import {
   TMarketDetails,
   TMarketPrice,
-  TResponseMarketDetails,
-  TResponseMarketPrice,
+  TMarketDetailsDTO,
+  TMarketPriceDTO,
 } from "./market.type";
 import convertError from "../../../config/error-converter";
 
@@ -12,18 +12,24 @@ const fetchItemPrice = async (
   name: string,
   game: TSupportedGames,
   proxy?: string
-): Promise<TResponseMarketPrice> => {
-  const marketEndpoint = "https://steamcommunity.com/market/priceoverview/";
-  const url = new URL(`${proxy ? proxy + marketEndpoint : marketEndpoint}`);
+): Promise<TMarketPriceDTO> => {
+  const marketEndpoint = new URL(
+    "https://steamcommunity.com/market/priceoverview/"
+  );
+
   const params = new URLSearchParams({
     appid: game,
     currency: "6",
     market_hash_name: name,
     l: "english",
   });
-  url.search = params.toString();
+  marketEndpoint.search = params.toString();
+
+  const urlToFetch = proxy
+    ? `${proxy}${encodeURIComponent(marketEndpoint.href)}`
+    : marketEndpoint.href;
   try {
-    const response = await axios.get<TMarketPrice>(url.href);
+    const response = await axios.get<TMarketPrice>(urlToFetch);
     if (!response.data) throw new Error("Fetch inventory went wrong");
     if (!response.data.success) throw new Error("Fetching success - false");
     console.log(
@@ -50,9 +56,10 @@ const fetchItemWithDetails = async (
   game: TSupportedGames,
   language: string = "english",
   proxy?: string
-): Promise<TResponseMarketDetails> => {
-  const marketEndpoint = "https://steamcommunity.com/market/search/render/";
-  const url = new URL(`${proxy ? proxy + marketEndpoint : marketEndpoint}`);
+): Promise<TMarketDetailsDTO> => {
+  const marketEndpoint = new URL(
+    "https://steamcommunity.com/market/search/render/"
+  );
   const params = new URLSearchParams({
     query: name,
     start: "0",
@@ -61,8 +68,12 @@ const fetchItemWithDetails = async (
     appid: game,
     l: language,
   });
-  url.search = params.toString();
-  const response = await axios.get<TMarketDetails>(url.href);
+  marketEndpoint.search = params.toString();
+
+  const urlToFetch = proxy
+    ? `${proxy}${encodeURIComponent(marketEndpoint.href)}`
+    : marketEndpoint.href;
+  const response = await axios.get<TMarketDetails>(urlToFetch);
   if (!response.data) throw new Error("Fetch inventory went wrong");
   if (!response.data.success) throw new Error("Fetching success - false");
   return {

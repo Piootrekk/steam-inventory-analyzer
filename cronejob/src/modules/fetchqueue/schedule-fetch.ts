@@ -1,5 +1,5 @@
 import Inventory from "./inventory/inventory";
-import { TResponseInventory } from "./inventory/inventory.type";
+import { TInventoryDTO } from "./inventory/inventory.type";
 import { TSupportedGames } from "./fetch/games.type";
 import ProxyManager from "./proxy/praxy-manager";
 import Market from "./market/market";
@@ -9,7 +9,7 @@ class ScheduleFetch {
   private proxies: string[] | string;
   private inventories: Inventory[] = [];
   private proxyManager: ProxyManager;
-  private fetchedInventories: TResponseInventory[] = [];
+  private fetchedInventories: TInventoryDTO[] = [];
   private delay: number;
 
   constructor(proxies: string[] | string | undefined, delay: number) {
@@ -24,7 +24,7 @@ class ScheduleFetch {
   }
 
   public async fetchAllInventories() {
-    const tasks: ((proxy?: string) => Promise<TResponseInventory>)[] = [];
+    const tasks: ((proxy?: string) => Promise<TInventoryDTO>)[] = [];
     this.inventories.forEach((inventory) => {
       tasks.push(...inventory.getTasks);
     });

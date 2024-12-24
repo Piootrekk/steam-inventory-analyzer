@@ -13,19 +13,14 @@ type TUniqueClassId = {
 };
 
 type TDescription = {
-  appid: number;
   classid: string;
   instanceid: string;
-  currency: number;
   background_color: string;
   icon_url: string;
   tradable: 1 | 0;
   name_color: string;
   type: string;
-  market_name: string;
-  name: string;
   market_hash_name: string;
-  commodity: number;
   market_tradable_restriction: 1 | 0 | undefined;
   market_marketable_restriction: 1 | 0 | undefined;
   marketable: 1 | 0;

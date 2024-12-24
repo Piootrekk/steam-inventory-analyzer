@@ -1,11 +1,11 @@
 import { TSupportedGames } from "../fetch/games.type";
 import { fetchInventory } from "../fetch/inventory.fech";
-import { TResponseInventory } from "./inventory.type";
+import { TInventoryDTO } from "./inventory.type";
 
 class Inventory {
   private steamid: string;
   private games: TSupportedGames[];
-  private tasks: ((proxy?: string) => Promise<TResponseInventory>)[];
+  private tasks: ((proxy?: string) => Promise<TInventoryDTO>)[];
 
   constructor(games: TSupportedGames[], steamid: string) {
     this.games = games;

@@ -33,42 +33,32 @@ const margeAssetWithDescriptions = (
       ? (correspondingItem.market_tradable_restriction = 0)
       : correspondingItem.market_tradable_restriction;
     const {
-      appid,
       instanceid,
       classid,
-      currency,
       background_color,
       icon_url,
       tradable,
       name_color,
       type,
-      market_name,
       market_hash_name,
-      commodity,
       market_tradable_restriction,
       market_marketable_restriction,
       marketable,
-      name,
     } = correspondingItem;
 
     return {
       ...asset,
-      appid,
       classid,
       instanceid,
-      currency,
       background_color,
       icon_url,
       tradable,
       name_color,
       type,
-      market_name,
       market_hash_name,
-      commodity,
       market_tradable_restriction,
       market_marketable_restriction,
       marketable,
-      name,
     };
   });
   return marged;
