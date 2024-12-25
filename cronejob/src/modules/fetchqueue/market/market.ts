@@ -1,7 +1,7 @@
 import { TSupportedGames } from "../fetch/games.type";
 import { fetchItemPrice } from "../fetch/market.fetch";
 import { TMarketPriceDTO } from "../fetch/market.type";
-import { TInventoryDTO } from "../inventory/inventory.type";
+import { TFetchedInventory } from "../inventory/inventory.type";
 
 type TNameWithGame = {
   market_hash_name: string;
@@ -12,12 +12,12 @@ class Market {
   private namesWithGame: TNameWithGame[];
   private tasks: ((proxy?: string) => Promise<TMarketPriceDTO>)[];
 
-  public constructor(inventories: TInventoryDTO[]) {
+  public constructor(inventories: TFetchedInventory[]) {
     this.namesWithGame = this.getMarketableItems(inventories);
     this.tasks = this.calculateTasks();
   }
 
-  private getMarketableItems(inventories: TInventoryDTO[]) {
+  private getMarketableItems(inventories: TFetchedInventory[]) {
     const martketable: TNameWithGame[] = inventories.flatMap((inventory) => {
       return inventory.inventory
         .filter(

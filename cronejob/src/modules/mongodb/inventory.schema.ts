@@ -1,6 +1,10 @@
-import { Schema } from "mongoose";
+import { Schema, Types } from "mongoose";
+import {
+  TFetchedInventory,
+  TInventoryWithPrices,
+} from "../fetchqueue/inventory/inventory.type";
 
-const InventoryItemSchema = new Schema({
+const InventoryItemSchema = new Schema<TInventoryWithPrices>({
   classid: { type: String, required: true },
   amount: { type: Number, required: true },
   instanceid: { type: String, required: true },
@@ -18,15 +22,19 @@ const InventoryItemSchema = new Schema({
   sold_today: { type: String, required: false },
 });
 
-const InventorySchema = new Schema({
+const InventorySchema = new Schema<TFetchedInventory>({
   steamid: { type: String, required: true },
   game: { type: String, required: true },
   inventory: { type: [InventoryItemSchema], required: true },
 });
 
-const UserInvestmentSchema = new Schema({
-  time: { type: Date, default: Date.now },
-  investment: { type: [InventorySchema], require: true },
-});
+const UserInvestmentSchema = new Schema(
+  {
+    _id: { type: Schema.Types.ObjectId, default: () => new Types.ObjectId() },
+    time: { type: Date, default: Date.now },
+    investments: { type: [InventorySchema], require: true },
+  },
+  { collection: "Inventories" }
+);
 
-export { UserInvestmentSchema };
+export default UserInvestmentSchema;

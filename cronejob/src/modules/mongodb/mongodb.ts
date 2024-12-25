@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { TFetchedInventory } from "../fetchqueue/inventory/inventory.type";
+import UserInvestmentSchema from "./inventory.schema";
 
 class MongoDB {
   private uri: string;
@@ -21,7 +23,6 @@ class MongoDB {
       throw new Error("Database is not created.");
     } else {
       this.db = dbConnections;
-      console.log(this.db.listCollections().toArray().toString());
       return dbConnections;
     }
   }
@@ -36,9 +37,9 @@ class MongoDB {
     } else throw new Error("Connecting to mongo went wrong.");
   }
 
-  public async createInventoryCollection(): Promise<void> {
-    const isColExist = await this.isCollectionExists("inventory");
-    if (!isColExist && this.db) await this.db.createCollection("inventory");
+  public async createInventoriesCollection(): Promise<void> {
+    const isColExist = await this.isCollectionExists("Inventories");
+    if (!isColExist && this.db) await this.db.createCollection("Inventories");
   }
 
   public async disconnect(): Promise<void> {
@@ -49,8 +50,9 @@ class MongoDB {
     } else throw new Error("Disconnecting to mongo went wrong.");
   }
 
-  public addModel(name: string, schema: mongoose.Schema): void {
-    mongoose.model(name, schema);
+  public async addFetchedItems(items: TFetchedInventory[]): Promise<void> {
+    const InventoryModel = mongoose.model("inventory", UserInvestmentSchema);
+    await InventoryModel.create({ investments: items });
   }
 }
 

@@ -78,6 +78,7 @@ const fetchItemWithDetails = async (
   if (!response.data.success) throw new Error("Fetching success - false");
   return {
     total_items: response.data.results[0].sell_listings,
+    hash_name: name,
   };
 };
 

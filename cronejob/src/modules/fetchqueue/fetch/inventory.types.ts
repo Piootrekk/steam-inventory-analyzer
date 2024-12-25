@@ -1,3 +1,5 @@
+import { TSupportedGames } from "./games.type";
+
 type TAsset = {
   appid: number;
   contextid: string;
@@ -38,6 +40,12 @@ type TInventoryResponse = {
   rwgrsn: number;
 };
 
+type TInventoryDTO = {
+  steamid: string;
+  game: TSupportedGames;
+  inventory: TInventory[];
+};
+
 export type {
   TAsset,
   TUniqueClassId,
@@ -45,4 +53,5 @@ export type {
   TInventoryResponse,
   TInventory,
   TDescriptionExtended,
+  TInventoryDTO,
 };

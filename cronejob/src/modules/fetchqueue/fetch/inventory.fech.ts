@@ -1,8 +1,7 @@
 import axios from "axios";
-import { TInventoryResponse } from "./inventory.types";
+import { TInventoryDTO, TInventoryResponse } from "./inventory.types";
 import { margeAssetWithDescriptions, sumByClassid } from "./inventory.utils";
 import { TSupportedGames } from "./games.type";
-import { TInventoryDTO } from "../inventory/inventory.type";
 
 const fetchInventory = async (
   steamid64: string,

@@ -66,6 +66,7 @@ type TMarketPriceDTO = {
 
 type TMarketDetailsDTO = {
   total_items: number;
+  hash_name: string;
 };
 
 export type {
