@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { TFetchedInventory } from "../fetchqueue/inventory/inventory.type";
 import UserInvestmentSchema from "./inventory.schema";
+import loggerSchema from "./logger.schema";
+import { TErrorLog } from "../logger/logger.type";
 
 class MongoDB {
   private uri: string;
@@ -50,8 +52,24 @@ class MongoDB {
     } else throw new Error("Disconnecting to mongo went wrong.");
   }
 
+  public async createLoggerCollection(): Promise<void> {
+    const isColExist = await this.isCollectionExists("Logs");
+    if (!isColExist && this.db) await this.db.createCollection("Logs");
+  }
+
+  public async addLogs(
+    loggingMap: Map<string, number>,
+    errorLogs: TErrorLog[]
+  ): Promise<void> {
+    const LoggerModel = mongoose.model("Logs", loggerSchema);
+    await LoggerModel.create({
+      catchedErros: errorLogs,
+      timers: loggingMap,
+    });
+  }
+
   public async addFetchedItems(items: TFetchedInventory[]): Promise<void> {
-    const InventoryModel = mongoose.model("inventory", UserInvestmentSchema);
+    const InventoryModel = mongoose.model("Inventories", UserInvestmentSchema);
     await InventoryModel.create({ investments: items });
   }
 }

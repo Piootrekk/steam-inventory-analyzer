@@ -1,0 +1,2 @@
+Adjust fetchqueue delay to request limits per second, per day
+Add substitute proxy if 429 error
