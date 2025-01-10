@@ -30,7 +30,7 @@ const fetchInventory = async (
     response.data.descriptions
   );
   console.log(
-    `TIME: ${new Date().toLocaleString()}, STEAMID: ${steamid64}, GAME: ${game}, PROXY: ${proxy}`
+    `SUCCESS INV FETCH - TIME: ${new Date().toLocaleString()}, GAME: ${game}`
   );
   return {
     steamid: steamid64,

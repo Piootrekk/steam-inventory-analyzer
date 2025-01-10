@@ -2,7 +2,7 @@ import { TErrorLog } from "./logger.type";
 
 class Logger {
   protected timers: Map<string, number>;
-  
+
   private errorLogs: TErrorLog[];
   private elapsedTimes: Map<string, number>;
 
@@ -43,6 +43,7 @@ class Logger {
   }
 
   public get getElapsedTimes() {
+    console.log(this.elapsedTimes);
     return this.elapsedTimes;
   }
 }

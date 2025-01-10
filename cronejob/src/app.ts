@@ -25,10 +25,10 @@ const main = async () => {
     logger.stopTimer("FetchingTime");
     logger.startTimer("InsertToDb");
     await db.addFetchedItems(inventories);
+    logger.stopTimer("InsertToDb");
     const timers = logger.getElapsedTimes;
     const erros = logger.getErrorLogs;
     await db.addLogs(timers, erros);
-    logger.stopTimer("InsertToDb");
   } catch (error) {
     console.log(`ERROR: `, error);
   } finally {

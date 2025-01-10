@@ -1,3 +1,4 @@
+import CustomError from "../../../config/error-converter";
 import logger from "../../logger/logger-singleton";
 
 class ProxyManager {
@@ -32,14 +33,21 @@ class ProxyManager {
       const batch = tasks.slice(i, i + effectiveBatchSize);
 
       const batchResults = await Promise.all(
-        batch.map((task, index) => {
+        batch.map(async (task, index) => {
           const currentTaskIndex = i + index + 1;
           const totalTasks = tasks.length;
           console.log(`--- Processing task ${currentTaskIndex}/${totalTasks}`);
           const proxy = this.roundRobinNext();
 
-          return task(proxy).catch((error) => {
-            if (error instanceof Error) logger.addLogError(error.message);
+          return task(proxy).catch((error: unknown) => {
+            if (error instanceof CustomError) {
+              console.log(error.getMessage);
+              logger.addLogError(error.logError());
+              return undefined;
+            }
+            const err = new CustomError(error);
+            console.log(err.getMessage);
+            logger.addLogError(err.logError());
             return undefined;
           });
         })

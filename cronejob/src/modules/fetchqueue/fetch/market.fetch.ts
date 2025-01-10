@@ -6,7 +6,7 @@ import {
   TMarketDetailsDTO,
   TMarketPriceDTO,
 } from "./market.type";
-import convertError from "../../../config/error-converter";
+import CustomError from "../../../config/error-converter";
 
 const fetchItemPrice = async (
   name: string,
@@ -30,10 +30,10 @@ const fetchItemPrice = async (
     : marketEndpoint.href;
   try {
     const response = await axios.get<TMarketPrice>(urlToFetch);
-    if (!response.data) throw new Error("Fetch inventory went wrong");
+    if (!response.data) throw new Error("Fetch item price went wrong");
     if (!response.data.success) throw new Error("Fetching success - false");
     console.log(
-      `TIME: ${new Date().toLocaleString()}, ITEM: ${name}, GAME: ${game}, PROXY: ${proxy}`
+      `SUCCESS - TIME: ${new Date().toLocaleString()}, ITEM: ${name}, GAME: ${game}`
     );
 
     return {
@@ -43,10 +43,11 @@ const fetchItemPrice = async (
       hash_name: name,
     };
   } catch (error) {
-    const convertedError = convertError(error);
-    console.log(convertedError.message);
+    const err = new CustomError(error);
     throw new Error(
-      `ERROR: ${convertedError.message}, NAME: ${name}, GAME: ${game}`
+      `ERROR: ${
+        err.getMessage
+      }, TIME: ${new Date().toLocaleString()}, ITEM: ${name}, GAME: ${game}}`
     );
   }
 };

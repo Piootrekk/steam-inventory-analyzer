@@ -64,7 +64,7 @@ class MongoDB {
     const LoggerModel = mongoose.model("Logs", loggerSchema);
     await LoggerModel.create({
       catchedErros: errorLogs,
-      timers: loggingMap,
+      timers: { data: loggingMap },
     });
   }
 
