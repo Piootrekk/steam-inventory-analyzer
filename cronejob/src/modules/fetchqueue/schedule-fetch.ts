@@ -5,16 +5,30 @@ import Market from "./market/market";
 import { TFetchedInventory } from "./inventory/inventory.type";
 
 class ScheduleFetch {
-  private proxies: string[] | string;
+  private proxies: string[];
   private inventories: Inventory[] = [];
   private proxyManager: ProxyManager;
+  private proxiesBackup: string[];
   private fetchedInventories: TFetchedInventory[] = [];
   private delay: number;
 
-  constructor(proxies: string[] | string | undefined, delay: number) {
+  constructor(
+    proxies: string[] | string | undefined,
+    proxiesBackup: string[] | string | undefined,
+    delay: number
+  ) {
     this.delay = delay;
     this.proxies = Array.isArray(proxies) ? proxies : proxies ? [proxies] : [];
-    this.proxyManager = new ProxyManager(this.proxies, delay);
+    this.proxiesBackup = Array.isArray(proxiesBackup)
+      ? proxiesBackup
+      : proxiesBackup
+      ? [proxiesBackup]
+      : [];
+    this.proxyManager = new ProxyManager(
+      this.proxies,
+      this.proxiesBackup,
+      delay
+    );
   }
 
   public addProfile(steamId: string, games: TSupportedGames[]) {

@@ -72,6 +72,28 @@ class MongoDB {
     const InventoryModel = mongoose.model("Inventories", UserInvestmentSchema);
     await InventoryModel.create({ investments: items });
   }
+
+  private async getLastAction(): Promise<Date | undefined> {
+    const LoggerModel = mongoose.model("Logs", loggerSchema);
+    const lastLog = await LoggerModel.findOne().sort({ _id: -1 }).exec();
+    return lastLog?._id.getTimestamp();
+  }
+
+  public async isLastActionToday(): Promise<boolean> {
+    const lastLog = await this.getLastAction();
+
+    if (!lastLog) {
+      return false;
+    }
+    console.log(`Last fetch: ${lastLog}`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return (
+      lastLog.getFullYear() === today.getFullYear() &&
+      lastLog.getMonth() === today.getMonth() &&
+      lastLog.getDate() === today.getDate()
+    );
+  }
 }
 
 export default MongoDB;

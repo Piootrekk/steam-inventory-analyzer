@@ -26,6 +26,9 @@ class CustomError extends Error {
       codeStatus = error.response.status;
     } else if (error instanceof Error) {
       message = error.message;
+    } else if (error instanceof CustomError) {
+      message = error.message;
+      codeStatus = error.codeStatus;
     }
     super(message);
     this.codeStatus = codeStatus;

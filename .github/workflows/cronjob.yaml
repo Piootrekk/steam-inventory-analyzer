@@ -1,0 +1,36 @@
+name: Items Fetcher Cronjob
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  build-and-start:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Change directory
+        run: cd ./cronejob
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --pure-lockfile
+
+      - name: Build application
+        run: yarn build
+
+      - name: Start application
+        run: yarn start
+        env:
+          MONGODB_CON_STRING: ${{ secrets.MONGODB_CON_STRING }}
+          PROXIES: ${{secrets.PROXIES}}
+          BACKUP_PROXIES: ${{secrets.BACKUP_PROXIES}}
