@@ -31,12 +31,18 @@ class ProxyManager {
     if (index !== -1) {
       const removedProxy = this.proxies.splice(index, 1)[0];
       this.usedProxies.push(removedProxy);
+      console.log("--- INFO: Removing washed proxy");
     }
   }
 
   private restoreProxyFromBackup = (): void => {
     const proxyBackup = this.proxiesBackup.shift();
-    if (proxyBackup) this.proxies.push(proxyBackup);
+    if (proxyBackup) {
+      this.proxies.push(proxyBackup);
+      console.log("--- INFO: Swapping washed proxy");
+    } else {
+      console.log("--- INFO: No proxies in backup");
+    }
   };
 
   public async executeRequestsInBatches<T>(
@@ -61,6 +67,7 @@ class ProxyManager {
             const err = new CustomError(error);
             console.log(err.getMessage);
             logger.addLogError(err.logError());
+            if (err.getStatus !== 429) return undefined;
             if (proxy) {
               this.setUsedProxy(proxy);
             }
