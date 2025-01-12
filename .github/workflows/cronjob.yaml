@@ -9,12 +9,13 @@ jobs:
   build-and-start:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./cronjob
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Change directory
-        run: cd ./cronejob
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,5 +33,5 @@ jobs:
         run: yarn start
         env:
           MONGODB_CON_STRING: ${{ secrets.MONGODB_CON_STRING }}
-          PROXIES: ${{secrets.PROXIES}}
-          BACKUP_PROXIES: ${{secrets.BACKUP_PROXIES}}
+          PROXIES: ${{ secrets.PROXIES }}
+          BACKUP_PROXIES: ${{ secrets.BACKUP_PROXIES }}
