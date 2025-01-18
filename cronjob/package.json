@@ -1,15 +1,15 @@
 {
-  "name": "cronejob",
-  "version": "1.0.0",
+  "name": "cronjob",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "noob",
+  "license": "MIT",
+  "description": "cornjob for fetching steam inventories & items price",
   "dependencies": {
     "@types/node": "^22.10.1",
     "axios": "^1.7.9",
